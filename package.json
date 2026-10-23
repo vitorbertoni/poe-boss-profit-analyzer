@@ -3,5 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Expected value, ROI and Monte Carlo simulation for Path of Exile 1 uber pinnacle bosses."
+  "description": "Expected value, ROI and Monte Carlo simulation for Path of Exile 1 uber pinnacle bosses.",
+  "scripts": {
+    "test": "node --test tests/craft.test.mjs"
+  }
 }

@@ -22,6 +22,7 @@ try {
 } catch {}
 
 const SIZES = ['Large', 'Medium'];
+const SIZE_TAGS = ['expansion_jewel_large', 'expansion_jewel_medium']; // base item tags
 const sizes = {};
 const enchantSize = new Map(); // enchant tag -> size
 for (const c of Object.values(clusters)) {
@@ -43,9 +44,9 @@ for (const [id, m] of Object.entries(mods)) {
   if (m.generation_type !== 'prefix' && m.generation_type !== 'suffix') continue;
   const weights = {};
   for (const w of m.spawn_weights || []) if (!(w.tag in weights)) weights[w.tag] = w.weight; // first match wins
-  // Keep a mod if it can spawn on at least one Large/Medium enchant, or everywhere (default > 0).
+  // Keep a mod if it can spawn on a Large/Medium base: through an enchant tag, the base tag, or default.
   const tags = Object.entries(weights).filter(([, w]) => w > 0).map(([t]) => t);
-  const relevant = tags.some((t) => t === 'default' || SIZES.includes(enchantSize.get(t)));
+  const relevant = tags.some((t) => t === 'default' || SIZE_TAGS.includes(t) || SIZES.includes(enchantSize.get(t)));
   if (!relevant) continue;
   const genWeights = {};
   for (const w of m.generation_weights || []) if (!(w.tag in genWeights)) genWeights[w.tag] = w.weight;

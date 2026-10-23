@@ -1,0 +1,23 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: collectors/package-lock.json
+      - name: Craft engine
+        run: node --test tests/craft.test.mjs
+      - name: Collectors
+        working-directory: collectors
+        run: npm ci && npm test

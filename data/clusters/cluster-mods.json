@@ -372,6 +372,54 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantArmour",
+   "type": "AfflictionJewelSmallPassivesGrantArmour",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantArmour"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(11-20) to Armour",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantArmour2",
+   "type": "AfflictionJewelSmallPassivesGrantArmour",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantArmour"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(21-30) to Armour",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantArmour3_",
+   "type": "AfflictionJewelSmallPassivesGrantArmour",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantArmour"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(31-40) to Armour",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantAttackSpeed",
    "type": "AfflictionJewelSmallPassivesGrantAttackSpeed",
    "groups": [
@@ -437,6 +485,54 @@
     "affliction_attack_damage_while_dual_wielding_": 250,
     "affliction_attack_damage_while_holding_a_shield": 250,
     "affliction_attack_damage_": 250,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantAttributes",
+   "type": "AfflictionJewelSmallPassivesGrantAttributes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantAttributes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +2 to All Attributes",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantAttributes2",
+   "type": "AfflictionJewelSmallPassivesGrantAttributes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantAttributes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +3 to All Attributes",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantAttributes3",
+   "type": "AfflictionJewelSmallPassivesGrantAttributes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantAttributes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +4 to All Attributes",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
     "default": 0
    }
   },
@@ -621,6 +717,54 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantChaosRes",
+   "type": "AfflictionJewelSmallPassivesGrantChaosRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantChaosRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +3% to Chaos Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantChaosRes2",
+   "type": "AfflictionJewelSmallPassivesGrantChaosRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantChaosRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +4% to Chaos Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantChaosRes3",
+   "type": "AfflictionJewelSmallPassivesGrantChaosRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantChaosRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +5% to Chaos Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantChaosSkillAttackAndCastSpeed",
    "type": "AfflictionJewelSmallPassivesGrantChaosSkillAttackAndCastSpeed",
    "groups": [
@@ -662,6 +806,54 @@
    "notable": null,
    "weights": {
     "affliction_chaos_damage": 250,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantColdRes_",
+   "type": "AfflictionJewelSmallPassivesGrantColdRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantColdRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3)% to Cold Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantColdRes2",
+   "type": "AfflictionJewelSmallPassivesGrantColdRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantColdRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5)% to Cold Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantColdRes3",
+   "type": "AfflictionJewelSmallPassivesGrantColdRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantColdRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-7)% to Cold Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
     "default": 0
    }
   },
@@ -801,6 +993,54 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantDamage_",
+   "type": "AfflictionJewelSmallPassivesGrantDamage",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDamage"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: 2% increased Damage",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantDamage2_",
+   "type": "AfflictionJewelSmallPassivesGrantDamage",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDamage"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: 3% increased Damage",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantDamage3",
+   "type": "AfflictionJewelSmallPassivesGrantDamage",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDamage"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: 4% increased Damage",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantDamageOverTime",
    "type": "AfflictionJewelSmallPassivesGrantDamageOverTime",
    "groups": [
@@ -858,6 +1098,54 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantDex_",
+   "type": "AfflictionJewelSmallPassivesGrantDex",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDex"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3) to Dexterity",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantDex2",
+   "type": "AfflictionJewelSmallPassivesGrantDex",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDex"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5) to Dexterity",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantDex3_",
+   "type": "AfflictionJewelSmallPassivesGrantDex",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantDex"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-8) to Dexterity",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantElementalAilmentDuration_",
    "type": "AfflictionJewelSmallPassivesGrantElementalAilmentDuration",
    "groups": [
@@ -903,6 +1191,54 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantElementalRes",
+   "type": "AfflictionJewelSmallPassivesGrantElementalRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantElementalRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +2% to all Elemental Resistances",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantElementalRes2",
+   "type": "AfflictionJewelSmallPassivesGrantElementalRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantElementalRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +3% to all Elemental Resistances",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantElementalRes3",
+   "type": "AfflictionJewelSmallPassivesGrantElementalRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantElementalRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +4% to all Elemental Resistances",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantElementalSkillAttackAndCastSpeed",
    "type": "AfflictionJewelSmallPassivesGrantElementalSkillAttackAndCastSpeed",
    "groups": [
@@ -944,6 +1280,150 @@
    "notable": null,
    "weights": {
     "affliction_elemental_damage": 250,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantES",
+   "type": "AfflictionJewelSmallPassivesGrantES",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantES"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(4-5) to Maximum Energy Shield",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantES2",
+   "type": "AfflictionJewelSmallPassivesGrantES",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantES"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(6-9) to Maximum Energy Shield",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantES3",
+   "type": "AfflictionJewelSmallPassivesGrantES",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantES"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(10-12) to Maximum Energy Shield",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantEvasion",
+   "type": "AfflictionJewelSmallPassivesGrantEvasion",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantEvasion"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(11-20) to Evasion",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantEvasion2__",
+   "type": "AfflictionJewelSmallPassivesGrantEvasion",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantEvasion"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(21-30) to Evasion",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantEvasion3",
+   "type": "AfflictionJewelSmallPassivesGrantEvasion",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantEvasion"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(31-40) to Evasion",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantFireRes",
+   "type": "AfflictionJewelSmallPassivesGrantFireRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantFireRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3)% to Fire Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantFireRes2",
+   "type": "AfflictionJewelSmallPassivesGrantFireRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantFireRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5)% to Fire Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantFireRes3",
+   "type": "AfflictionJewelSmallPassivesGrantFireRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantFireRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-7)% to Fire Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
     "default": 0
    }
   },
@@ -1131,6 +1611,198 @@
    }
   },
   {
+   "id": "AfflictionJewelSmallPassivesGrantInt_",
+   "type": "AfflictionJewelSmallPassivesGrantInt",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantInt"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3) to Intelligence",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantInt2_",
+   "type": "AfflictionJewelSmallPassivesGrantInt",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantInt"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5) to Intelligence",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantInt3",
+   "type": "AfflictionJewelSmallPassivesGrantInt",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantInt"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-8) to Intelligence",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLife_",
+   "type": "AfflictionJewelSmallPassivesGrantLife",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLife"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3) to Maximum Life",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLife2_",
+   "type": "AfflictionJewelSmallPassivesGrantLife",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLife"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-7) to Maximum Life",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLife3",
+   "type": "AfflictionJewelSmallPassivesGrantLife",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLife"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(8-10) to Maximum Life",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLifeRegen___",
+   "type": "AfflictionJewelSmallPassivesGrantLifeRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLifeRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: Regenerate 0.1% of Life per Second",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLifeRegen2_",
+   "type": "AfflictionJewelSmallPassivesGrantLifeRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLifeRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: Regenerate 0.15% of Life per Second",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLifeRegen3",
+   "type": "AfflictionJewelSmallPassivesGrantLifeRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLifeRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: Regenerate 0.2% of Life per Second",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLightningRes",
+   "type": "AfflictionJewelSmallPassivesGrantLightningRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLightningRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3)% to Lightning Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLightningRes2_",
+   "type": "AfflictionJewelSmallPassivesGrantLightningRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLightningRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5)% to Lightning Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantLightningRes3",
+   "type": "AfflictionJewelSmallPassivesGrantLightningRes",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantLightningRes"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-7)% to Lightning Resistance",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
    "id": "AfflictionJewelSmallPassivesGrantLightningSkillAttackAndCastSpeed",
    "type": "AfflictionJewelSmallPassivesGrantLightningSkillAttackAndCastSpeed",
    "groups": [
@@ -1172,6 +1844,102 @@
    "notable": null,
    "weights": {
     "affliction_lightning_damage": 250,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantMana",
+   "type": "AfflictionJewelSmallPassivesGrantMana",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantMana"
+   ],
+   "affix": "prefix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-5) to Maximum Mana",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantMana2",
+   "type": "AfflictionJewelSmallPassivesGrantMana",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantMana"
+   ],
+   "affix": "prefix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(6-8) to Maximum Mana",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantMana3",
+   "type": "AfflictionJewelSmallPassivesGrantMana",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantMana"
+   ],
+   "affix": "prefix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(9-10) to Maximum Mana",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantManaRegen",
+   "type": "AfflictionJewelSmallPassivesGrantManaRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantManaRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: 4% increased Mana Regeneration Rate",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantManaRegen2",
+   "type": "AfflictionJewelSmallPassivesGrantManaRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantManaRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: 5% increased Mana Regeneration Rate",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantManaRegen3_",
+   "type": "AfflictionJewelSmallPassivesGrantManaRegen",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantManaRegen"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: 6% increased Mana Regeneration Rate",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
     "default": 0
    }
   },
@@ -1352,6 +2120,54 @@
    "notable": null,
    "weights": {
     "affliction_projectile_damage": 250,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantStr",
+   "type": "AfflictionJewelSmallPassivesGrantStr",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantStr"
+   ],
+   "affix": "suffix",
+   "ilvl": 1,
+   "text": "Added Small Passive Skills also grant: +(2-3) to Strength",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 500,
+    "expansion_jewel_medium": 500,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantStr2_",
+   "type": "AfflictionJewelSmallPassivesGrantStr",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantStr"
+   ],
+   "affix": "suffix",
+   "ilvl": 68,
+   "text": "Added Small Passive Skills also grant: +(4-5) to Strength",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 400,
+    "expansion_jewel_medium": 400,
+    "default": 0
+   }
+  },
+  {
+   "id": "AfflictionJewelSmallPassivesGrantStr3_",
+   "type": "AfflictionJewelSmallPassivesGrantStr",
+   "groups": [
+    "AfflictionJewelSmallPassivesGrantStr"
+   ],
+   "affix": "suffix",
+   "ilvl": 84,
+   "text": "Added Small Passive Skills also grant: +(6-8) to Strength",
+   "notable": null,
+   "weights": {
+    "expansion_jewel_large": 300,
+    "expansion_jewel_medium": 300,
     "default": 0
    }
   },
