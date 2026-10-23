@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PoE Boss Profit Analyzer</title>
+    <meta
+      name="description"
+      content="Expected value, ROI and Monte Carlo simulation for Path of Exile uber pinnacle bosses, using live poe.ninja prices and community drop-rate estimates."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23c9a45c'/><path d='M16 9l6 3.5v7L16 23l-6-3.5v-7z' fill='%2314100c'/></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/site.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-inner">
+        <div class="top-left">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <h1>PoE Boss Profit Analyzer</h1>
+              <p class="sub">Uber pinnacle boss ROI · Path of Exile 1</p>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Pages">
+            <a href="/" aria-current="page">Boss ROI</a>
+            <a href="/invest">League Investments</a>
+          </nav>
+        </div>
+        <div class="controls">
+          <span class="pill" id="league">Loading…</span>
+          <div class="seg" role="group" aria-label="Currency unit">
+            <button data-unit="div" aria-pressed="true">Divine</button>
+            <button data-unit="chaos" aria-pressed="false">Chaos</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p>
+          Expected value per kill from community drop-rate estimates and live poe.ninja prices.
+          Every chance and price is editable, so you can plug in your own numbers.
+        </p>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section aria-labelledby="pick-title">
+        <h2 id="pick-title" class="section-title">Choose a boss <span class="muted">sorted by ROI</span></h2>
+        <div class="grid" id="grid"></div>
+      </section>
+
+      <section id="detail" class="detail" aria-live="polite"></section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        Drop rates are community estimates collected on
+        <a href="https://www.poewiki.net/" target="_blank" rel="noopener">poewiki.net</a>; GGG does not publish
+        official rates. Prices from <a href="https://poe.ninja/" target="_blank" rel="noopener">poe.ninja</a>,
+        refreshed hourly. Jewels are valued unidentified.
+      </p>
+      <p>
+        This site is fan-made and not affiliated with or endorsed by Grinding Gear Games. Path of Exile is a
+        trademark of Grinding Gear Games.
+      </p>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

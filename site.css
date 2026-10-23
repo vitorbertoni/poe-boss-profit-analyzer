@@ -1,0 +1,94 @@
+/* Shared navigation + League Investments page. Loaded after styles.css. */
+
+.nav { display: flex; gap: 4px; margin-left: 8px; }
+.nav a {
+  text-decoration: none; color: var(--muted); font-size: 13px; padding: 6px 10px; border-radius: 8px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.nav a:hover { color: var(--text); border-color: var(--line-soft); }
+.nav a[aria-current='page'] { color: var(--gold-hi); border-color: var(--line); background: var(--bg-2); }
+.top-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+/* Filters */
+.filters { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: end; }
+.field { display: grid; gap: 5px; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.sel, .search {
+  background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 8px; padding: 6px 10px; font-size: 13.5px;
+  color: var(--text); text-transform: none; letter-spacing: 0;
+}
+.sel:hover, .search:hover { border-color: var(--line); }
+.sel:focus, .search:focus { outline: none; border-color: var(--gold); }
+.search { width: 190px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; padding-bottom: 6px; }
+.check input { accent-color: var(--gold); width: 15px; height: 15px; }
+
+/* Takeaway */
+.takeaway { margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+.takeaway b { color: var(--text); font-weight: 600; }
+
+/* Ranking table */
+.inv-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr); gap: 16px; align-items: start; margin-top: 18px; }
+.rank-box { max-height: 640px; overflow: auto; margin: 0 -16px -16px; padding: 0 16px 8px; }
+.rank th, .rank td { padding: 8px 6px; text-align: right; border-bottom: 1px solid var(--line-soft); font-size: 13.5px; white-space: nowrap; }
+.rank th {
+  position: sticky; top: 0; background: var(--panel); z-index: 1; color: var(--muted); font-weight: 500; font-size: 11.5px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.rank th button { all: unset; cursor: pointer; }
+.rank th button:hover, .rank th[aria-sort$='ending'] button { color: var(--gold-hi); }
+.rank th:first-child, .rank td:first-child { text-align: left; }
+.rank tbody tr { cursor: pointer; transition: background 0.12s; }
+.rank tbody tr:hover { background: var(--panel-2); }
+.rank tbody tr[aria-selected='true'] { background: var(--panel-2); box-shadow: inset 2px 0 0 var(--gold); }
+.rank .nm { font-weight: 500; white-space: normal; min-width: 140px; }
+.rank .nm .tag { white-space: nowrap; }
+.tag { font-size: 10.5px; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: 1px; color: var(--muted); background: var(--bg-2); border: 1px solid var(--line-soft); }
+.ret { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.ret i { display: inline-block; height: 6px; border-radius: 3px; background: var(--pos); opacity: 0.7; }
+.empty { color: var(--faint); font-size: 13px; padding: 18px 0; text-align: center; }
+
+/* Side */
+.inv-side { display: grid; gap: 16px; position: sticky; top: 84px; }
+.item-title { font: 700 20px/1.15 var(--serif); color: var(--gold-hi); margin: 0 0 4px; letter-spacing: 0.02em; }
+.item-sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.inv-layout > *, .inv-side > * { min-width: 0; }
+.kpis.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kpis.four .kpi:last-child { grid-column: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 3px; border-radius: 2px; display: inline-block; }
+.chart-wrap { position: relative; }
+.chart .grid line { stroke: var(--line-soft); }
+.chart .axis { stroke: var(--line); }
+.chart .mark { stroke: var(--gold); stroke-dasharray: 4 4; opacity: 0.7; }
+.chart .mark-t { fill: var(--gold); font-size: 10.5px; }
+.chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .dot { stroke: var(--panel); stroke-width: 1.5; }
+.chart.dim .ln { opacity: 0.25; }
+.chart.dim .ln.hot { opacity: 1; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 9px; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; display: none; z-index: 3;
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.7);
+}
+.tip .d { color: var(--faint); margin-bottom: 3px; }
+.tip i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 6px; }
+
+.method p { color: var(--muted); font-size: 13px; margin: 0 0 8px; max-width: 900px; }
+.method p:last-child { margin-bottom: 0; }
+
+@media (max-width: 1280px) and (min-width: 1021px) {
+  .rank .col-best { display: none; }
+}
+@media (max-width: 1020px) {
+  .inv-layout { grid-template-columns: 1fr; }
+  .inv-side { position: static; order: -1; }
+  .rank-box { max-height: 520px; }
+}
+@media (max-width: 560px) {
+  .nav { margin-left: 0; }
+  .top .pill { white-space: nowrap; font-size: 12px; padding: 4px 10px; }
+  .search { width: 100%; }
+  .field.grow { flex: 1 1 100%; }
+  .rank .col-best, .rank .col-n { display: none; }
+}

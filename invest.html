@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>League Investments · PoE Boss Profit Analyzer</title>
+    <meta
+      name="description"
+      content="How Path of Exile 1 currency and fragment prices move during a league: buy on day X, sell on day Y, measured in divines across seven past leagues."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23c9a45c'/><path d='M16 9l6 3.5v7L16 23l-6-3.5v-7z' fill='%2314100c'/></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/site.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-inner">
+        <div class="top-left">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <h1>PoE Boss Profit Analyzer</h1>
+              <p class="sub">League investments · Path of Exile 1</p>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Pages">
+            <a href="/">Boss ROI</a>
+            <a href="/invest" aria-current="page">League Investments</a>
+          </nav>
+        </div>
+        <div class="controls">
+          <span class="pill" id="league">Loading…</span>
+          <div class="seg" role="group" aria-label="Chart unit">
+            <button data-unit="div" aria-pressed="true">Divine</button>
+            <button data-unit="chaos" aria-pressed="false">Chaos</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p>
+          Which currencies and fragments gain value as a league goes on? Pick a day to buy and a day to sell and see how
+          every item did across the last seven leagues, measured in divines so chaos inflation does not count as profit.
+        </p>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section aria-labelledby="win-title">
+        <h2 id="win-title" class="section-title">Choose a window <span class="muted">days since league start</span></h2>
+        <div class="panel">
+          <div class="filters">
+            <label class="field">Buy on
+              <select class="sel" id="buy"></select>
+            </label>
+            <label class="field">Sell on
+              <select class="sel" id="sell"></select>
+            </label>
+            <div class="field">Category
+              <div class="seg" role="group" aria-label="Category" id="cat">
+                <button data-cat="all" aria-pressed="true">All</button>
+                <button data-cat="cur" aria-pressed="false">Currency</button>
+                <button data-cat="frag" aria-pressed="false">Fragments</button>
+              </div>
+            </div>
+            <label class="field grow">Search
+              <input class="search" id="q" type="search" placeholder="e.g. Fracturing" autocomplete="off" />
+            </label>
+            <label class="check"><input type="checkbox" id="cons" checked /> Consistent only (rose in ≥ 70% of leagues)</label>
+          </div>
+          <p class="takeaway" id="takeaway"></p>
+        </div>
+      </section>
+
+      <div class="inv-layout">
+        <section class="panel" aria-labelledby="rank-title">
+          <h3 id="rank-title">Ranking <small id="rank-note"></small></h3>
+          <div class="rank-box">
+            <table class="rank">
+              <thead>
+                <tr>
+                  <th aria-sort="none"><button data-sort="name">Item</button></th>
+                  <th aria-sort="none"><button data-sort="buyC">Buy price</button></th>
+                  <th aria-sort="descending"><button data-sort="med">Median return</button></th>
+                  <th aria-sort="none"><button data-sort="pos">Leagues up</button></th>
+                  <th aria-sort="none"><button data-sort="worst">Worst</button></th>
+                  <th aria-sort="none" class="col-best"><button data-sort="best">Best</button></th>
+                  <th aria-sort="none" class="col-n"><button data-sort="n">Leagues</button></th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="inv-side">
+          <section class="panel" aria-live="polite">
+            <h2 class="item-title" id="item-name">—</h2>
+            <p class="item-sub" id="item-sub"></p>
+            <div class="kpis four">
+              <div class="kpi"><span>Median return</span><b id="k-med">—</b></div>
+              <div class="kpi"><span>Leagues up</span><b id="k-pos">—</b></div>
+              <div class="kpi"><span>Worst league</span><b id="k-worst">—</b></div>
+              <div class="kpi"><span>Typical buy price</span><b id="k-buy">—</b></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h3>Price by league day <small id="chart-unit">log scale, in divine</small></h3>
+            <div class="chart-wrap" id="curve-wrap">
+              <svg class="chart" id="curve" role="img" aria-label="Price of the selected item by day of league"></svg>
+              <div class="tip" id="curve-tip"></div>
+            </div>
+            <div class="legend" id="legend"></div>
+          </section>
+
+          <section class="panel">
+            <h3>Divine Orb in chaos <small>why returns are measured in divine</small></h3>
+            <div class="chart-wrap" id="div-wrap">
+              <svg class="chart" id="divchart" role="img" aria-label="Divine Orb price in chaos by day of league"></svg>
+              <div class="tip" id="div-tip"></div>
+            </div>
+            <p class="fine">Chaos loses value through every league, so almost anything looks like it gains when priced in chaos.</p>
+          </section>
+        </aside>
+      </div>
+
+      <section class="panel method" style="margin-top: 16px" aria-labelledby="m-title">
+        <h3 id="m-title">How this is calculated</h3>
+        <p>
+          Daily price dumps from poe.ninja for the last seven finished softcore challenge leagues
+          (<span id="m-leagues">loading…</span>). Day 0 is the first day with prices. Low-confidence points are
+          dropped and each series is smoothed with a 3-day rolling median.
+        </p>
+        <p>
+          Return = price in divine on the sell day ÷ price in divine on the buy day − 1, worked out per league. The table
+          shows the median across leagues, how many leagues the item went up in, and the worst and best league. Only items
+          with data in at least 4 leagues are listed, so newer items have a shorter history.
+        </p>
+        <p>
+          Past leagues are not a promise about the next one: patches change how items drop, and liquidity matters (on day 2
+          few people are selling endgame items). Trade time and the cost of tying up your currency are not included.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        Prices from <a href="https://poe.ninja/poe1/data" target="_blank" rel="noopener">poe.ninja data dumps</a>.
+        Historical leagues only; the current league is not included until its dump is published.
+      </p>
+      <p>
+        This site is fan-made and not affiliated with or endorsed by Grinding Gear Games. Path of Exile is a
+        trademark of Grinding Gear Games.
+      </p>
+    </footer>
+
+    <script type="module" src="/invest.js"></script>
+  </body>
+</html>
