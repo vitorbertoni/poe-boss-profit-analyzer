@@ -1,0 +1,36 @@
+name: ninja-prices
+
+# Craft currency + white cluster base prices from poe.ninja's documented economy API.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      league:
+        description: League id (blank = current softcore league)
+        required: false
+
+concurrency:
+  group: ninja-prices
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: collectors
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: collectors/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: node ninja-prices.mjs
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LEAGUE: ${{ inputs.league }}
