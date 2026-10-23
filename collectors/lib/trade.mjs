@@ -54,7 +54,6 @@ export function buildQuery({ size, enchantOption: opt, notableStats, passives = 
       ],
       filters: {
         misc_filters: { filters: { ilvl, corrupted: { option: 'false' } } },
-        trade_filters: { filters: { sale_type: { option: null } } },
       },
     },
     sort: { price: 'asc' },
