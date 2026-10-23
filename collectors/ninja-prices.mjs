@@ -2,10 +2,14 @@
 // Env: DATABASE_URL (required), LEAGUE (optional, defaults to the current softcore league).
 import { connect, startRun } from './lib/db.mjs';
 import { NINJA, currentLeague, getJson, parseCurrency, parseBases } from './lib/ninja.mjs';
+import { reportError } from './lib/report.mjs';
 
-const sql = connect();
-const run = await startRun(sql, 'ninja-prices');
+let sql;
+let run;
 try {
+  sql = connect();
+  run = await startRun(sql, 'ninja-prices');
+
   const league = process.env.LEAGUE || (await currentLeague());
   const q = `league=${encodeURIComponent(league)}`;
   const [cur, clusters] = await Promise.all([
@@ -33,9 +37,9 @@ try {
   await run.ok(currency.length + baseRows.length, { league, currency: currency.length, bases: baseRows.length });
   console.log(`${league}: ${currency.length} currency rows, ${baseRows.length} base rows`);
 } catch (e) {
-  await run.fail(e);
-  console.error(e);
+  reportError(e);
+  await run?.fail(e).catch(() => {});
   process.exitCode = 1;
 } finally {
-  await sql.end();
+  await sql?.end().catch(() => {});
 }
