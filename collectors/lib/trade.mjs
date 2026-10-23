@@ -9,7 +9,10 @@ const ENCHANT_STAT = 'enchant.stat_3948993189';
 const PASSIVES_STAT = 'enchant.stat_3086156145';
 const PREFIX = 'Added Small Passive Skills grant: ';
 
-/** Maps trade stat data to { notables: Map(name -> stat id), enchants: Map(joined text -> option) }. */
+/** Order- and case-insensitive key for an enchant given as lines (RePoE) or a joined string (trade, poe.ninja). */
+export const enchantKey = (lines) => lines.map((l) => l.trim().toLowerCase()).sort().join(' | ');
+
+/** Maps trade stat data to { notables: Map(name -> stat id), enchants: Map(enchantKey -> option) }. */
 export function indexStats(statsJson) {
   const notables = new Map();
   const enchants = new Map();
@@ -18,8 +21,7 @@ export function indexStats(statsJson) {
       const m = /^1 Added Passive Skill is (.+)$/.exec(e.text);
       if (group.id === 'explicit' && m) notables.set(m[1], e.id);
       if (group.id === 'enchant' && e.id.startsWith(`${ENCHANT_STAT}|`)) {
-        const text = e.text.split('\n').map((l) => l.replace(PREFIX, '')).join('\n');
-        enchants.set(text, Number(e.id.split('|')[1]));
+        enchants.set(enchantKey(e.text.split('\n').map((l) => l.replace(PREFIX, ''))), Number(e.id.split('|')[1]));
       }
     }
   }
@@ -28,7 +30,7 @@ export function indexStats(statsJson) {
 
 /** Trade option for a RePoE enchant (its `text` lines). */
 export function enchantOption(index, enchant) {
-  return index.enchants.get(enchant.text.join('\n')) ?? null;
+  return index.enchants.get(enchantKey(enchant.text)) ?? null;
 }
 
 export const DEFAULT_PASSIVES = { Large: 8, Medium: 4 };

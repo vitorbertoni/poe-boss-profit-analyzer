@@ -16,7 +16,8 @@ test('indexStats maps notables and multi-line enchants', () => {
   const idx = indexStats(STATS);
   assert.equal(idx.notables.get('Prismatic Heart'), 'explicit.stat_1');
   assert.equal(enchantOption(idx, { text: ['10% increased Elemental Damage'] }), 11);
-  assert.equal(enchantOption(idx, { text: ['Staff Attacks deal 12% increased Damage with Hits and Ailments', 'Mace or Sceptre Attacks deal 12% increased Damage with Hits and Ailments'] }), 2);
+  // RePoE lists these lines in the opposite order to the trade site
+  assert.equal(enchantOption(idx, { text: ['Mace or Sceptre Attacks deal 12% increased Damage with Hits and Ailments', 'Staff Attacks deal 12% increased Damage with Hits and Ailments'] }), 2);
   assert.equal(enchantOption(idx, { text: ['nope'] }), null);
 });
 
