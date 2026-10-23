@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cluster Jewels · PoE Boss Profit Analyzer</title>
+    <meta
+      name="description"
+      content="Which rare cluster jewels are worth crafting in Path of Exile 1: most-used notable combos, instant-buyout prices and the expected cost to make them with Alteration, Augmentation and Regal."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23c9a45c'/><path d='M16 9l6 3.5v7L16 23l-6-3.5v-7z' fill='%2314100c'/></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/site.css" />
+    <style>
+      .combo .sub { display: block; font-size: 11.5px; color: var(--faint); font-weight: 400; white-space: normal; }
+      .prices-grid { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; }
+      .prices-grid .in { width: 84px; }
+      details.panel summary { cursor: pointer; font: 600 13px var(--serif); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); list-style: none; }
+      details.panel summary::-webkit-details-marker { display: none; }
+      details.panel summary::after { content: ' +'; color: var(--muted); }
+      details.panel[open] summary::after { content: ' −'; }
+      details.panel[open] summary { margin-bottom: 12px; }
+      .tiers th, .tiers td { padding: 7px 6px; text-align: right; border-bottom: 1px solid var(--line-soft); font-size: 13px; white-space: nowrap; }
+      .tiers th { color: var(--muted); font-weight: 500; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+      .tiers th:first-child, .tiers td:first-child { text-align: left; }
+      .tiers tr.best td { color: var(--gold-hi); }
+      .strategy { color: var(--muted); font-size: 13px; margin: 12px 0 0; }
+      .strategy b { color: var(--text); font-weight: 600; }
+      .sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+      .sources .tag { margin-left: 0; }
+      .sources .tag.bad { color: var(--neg); border-color: rgba(217, 103, 94, 0.4); }
+      .unpriced td { color: var(--faint); }
+      .progress { color: var(--faint); font-size: 12.5px; }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-inner">
+        <div class="top-left">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <h1>PoE Boss Profit Analyzer</h1>
+              <p class="sub">Cluster jewel crafting · Path of Exile 1</p>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Pages">
+            <a href="/">Boss ROI</a>
+            <a href="/invest">League Investments</a>
+            <a href="/clusters" aria-current="page">Cluster Jewels</a>
+          </nav>
+        </div>
+        <div class="controls">
+          <span class="pill" id="league">Loading…</span>
+          <div class="seg" role="group" aria-label="Currency unit" id="unit">
+            <button data-unit="div" aria-pressed="true">Divine</button>
+            <button data-unit="chaos" aria-pressed="false">Chaos</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p>
+          The cluster jewels players use most, what they sell for right now with instant buyout, and what they cost to
+          craft with Alteration, Augmentation and Regal. Ranked by expected profit per craft.
+        </p>
+        <p class="status" id="status"></p>
+        <div class="sources" id="sources"></div>
+      </section>
+
+      <section aria-labelledby="filter-title">
+        <h2 id="filter-title" class="section-title">Filter <span class="muted">notable pairs from poe.ninja builds</span></h2>
+        <div class="panel">
+          <div class="filters">
+            <div class="field">Size
+              <div class="seg" role="group" aria-label="Size" id="size">
+                <button data-size="all" aria-pressed="true">All</button>
+                <button data-size="Large" aria-pressed="false">Large</button>
+                <button data-size="Medium" aria-pressed="false">Medium</button>
+              </div>
+            </div>
+            <label class="field">Item level
+              <select class="sel" id="tier">
+                <option value="best">Best for each combo</option>
+                <option value="75">75–83</option>
+                <option value="84">84+</option>
+              </select>
+            </label>
+            <label class="field">Min. listings
+              <input class="in" id="minlist" type="number" min="0" step="1" value="10" inputmode="numeric" />
+            </label>
+            <label class="field">Max. base price (c)
+              <input class="in" id="maxbase" type="number" min="0" step="any" placeholder="any" inputmode="decimal" />
+            </label>
+            <label class="field grow">Search
+              <input class="search" id="q" type="search" placeholder="e.g. Prismatic Heart" autocomplete="off" />
+            </label>
+          </div>
+          <p class="takeaway" id="takeaway"></p>
+        </div>
+      </section>
+
+      <details class="panel" style="margin-top: 16px" id="prices-panel">
+        <summary>Currency prices</summary>
+        <div class="prices-grid" id="prices"></div>
+        <p class="fine">Prefilled from poe.ninja. Your edits stay in this browser and recalculate every craft cost instantly.
+          <button class="btn" id="reset-prices" type="button">Reset to poe.ninja</button></p>
+      </details>
+
+      <div class="inv-layout">
+        <section class="panel" aria-labelledby="rank-title">
+          <h3 id="rank-title">Ranking <small id="rank-note"></small></h3>
+          <div class="rank-box">
+            <table class="rank">
+              <thead>
+                <tr>
+                  <th aria-sort="none"><button data-sort="name">Combo</button></th>
+                  <th aria-sort="none"><button data-sort="share">Used by</button></th>
+                  <th aria-sort="none" class="col-n"><button data-sort="ilvl">ilvl</button></th>
+                  <th aria-sort="none"><button data-sort="sell">Sells for</button></th>
+                  <th aria-sort="none"><button data-sort="cost">Cost</button></th>
+                  <th aria-sort="descending"><button data-sort="net">Profit</button></th>
+                  <th aria-sort="none" class="col-best"><button data-sort="listings">Listings</button></th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="inv-side">
+          <section class="panel" aria-live="polite" id="detail">
+            <h2 class="item-title">—</h2>
+          </section>
+        </aside>
+      </div>
+
+      <section class="panel method" style="margin-top: 16px" aria-labelledby="m-title">
+        <h3 id="m-title">How this is calculated</h3>
+        <p>
+          <b>Combos.</b> poe.ninja builds show how many characters allocate each cluster notable. Two notables that can
+          roll on the same enchant and appear on the same character are counted as a pair. poe.ninja does not say which
+          jewel a notable sits on, so a few pairs may really be on two different jewels; those rarely sell, which keeps them
+          low in the ranking.
+        </p>
+        <p>
+          <b>Sell price.</b> Official trade site, instant buyout listings only, uncorrupted, 8 passives for Large and 4 for
+          Medium, by item level. "Sells for" is the median of the ten cheapest listings after dropping bait prices.
+        </p>
+        <p>
+          <b>Cost.</b> White base from poe.ninja plus the expected currency to craft it: Alteration until the magic jewel is
+          worth keeping, Augmentation when it helps, Regal, and Scouring + Transmutation on a miss. Mod weights come from the
+          game files (RePoE); the engine picks the cheapest stopping rule, so it may keep jewels with either target notable.
+          It assumes an Alteration gives two mods half of the time.
+        </p>
+        <p>
+          Prices move and listings are asking prices: check the trade site before you commit. Profit is per jewel and does
+          not include your time.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        Builds and economy data from <a href="https://poe.ninja/" target="_blank" rel="noopener">poe.ninja</a>, prices from
+        the <a href="https://www.pathofexile.com/trade" target="_blank" rel="noopener">official trade site</a>, mod weights
+        from <a href="https://github.com/repoe-fork/repoe-fork.github.io" target="_blank" rel="noopener">RePoE</a>.
+      </p>
+      <p>
+        This site is fan-made and not affiliated with or endorsed by Grinding Gear Games. Path of Exile is a
+        trademark of Grinding Gear Games.
+      </p>
+    </footer>
+
+    <script type="module" src="/clusters.js"></script>
+  </body>
+</html>
