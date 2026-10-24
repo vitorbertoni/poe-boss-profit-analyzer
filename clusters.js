@@ -83,7 +83,7 @@ function build() {
     if (passives === PASSIVES[size]) bases.set(k, { chaos, n, exact: true });
     else if (!bases.get(k)?.exact && (!bases.has(k) || bases.get(k).chaos > chaos)) bases.set(k, { chaos, n, exact: false, passives });
   }
-  const trade = new Map(API.trade.map(([key, tier, listings, sample, min, p25, med, at]) => [`${key}|${tier}`, { listings, sample, min, p25, med, at }]));
+  const trade = new Map(API.trade.map(([key, tier, listings, sample, min, p25, med, at, searchId]) => [`${key}|${tier}`, { listings, sample, min, p25, med, at, searchId }]));
   const queries = new Map(API.queries.map(([key, tier, q]) => [`${key}|${tier}`, q]));
 
   ROWS = API.usage
@@ -237,8 +237,11 @@ function renderTable() {
   );
 }
 
-function tradeUrl(query) {
-  return query ? `https://www.pathofexile.com/trade/search/${encodeURIComponent(API.league)}?q=${encodeURIComponent(JSON.stringify(query))}` : null;
+// Prefer the trade site's own share format (/search/<league>/<id>); fall back to the query in the URL.
+function tradeUrl(trade, query) {
+  const base = `https://www.pathofexile.com/trade/search/${encodeURIComponent(API.league)}`;
+  if (trade?.searchId) return `${base}/${encodeURIComponent(trade.searchId)}`;
+  return query ? `${base}?q=${encodeURIComponent(JSON.stringify({ query }))}` : null;
 }
 
 function renderDetail() {
@@ -300,7 +303,7 @@ function renderDetail() {
     parts.push(s, n);
   } else if (best?.craft) parts.push(el('p', 'strategy', `Can't be crafted with alt/aug/regal here: ${best.craft.reason}.`));
 
-  const url = tradeUrl(best?.query);
+  const url = tradeUrl(best?.trade, best?.query);
   if (url) {
     const a = el('a', 'btn', 'Open this trade search');
     Object.assign(a, { href: url, target: '_blank', rel: 'noopener' });

@@ -97,7 +97,7 @@ try {
         listings = (await call('trade-fetch', `${TRADE}/fetch/${ids}?query=${found.id}`)).result || [];
       }
       const s = summarize(listings, rates);
-      await sql`insert into poe.trade_prices ${sql({ league, combo_key: job.combo_key, ilvl_tier: job.ilvl_tier, listing_count: found.total ?? 0, ...s })}`;
+      await sql`insert into poe.trade_prices ${sql({ league, combo_key: job.combo_key, ilvl_tier: job.ilvl_tier, listing_count: found.total ?? 0, search_id: found.id ?? null, ...s })}`;
       await sql`update poe.trade_queue set last_checked = now(), last_status = ${'ok'} where league = ${league} and combo_key = ${job.combo_key} and ilvl_tier = ${job.ilvl_tier}`;
       written++;
     }

@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const league = encodeURIComponent(latest.league);
     const [usage, trade, bases, currency, queries] = await Promise.all([
       rest(`poe_cluster_usage?select=size,enchant,combo_key,notables,build_count,share&snapshot_version=eq.${encodeURIComponent(latest.snapshot_version)}&time_machine=eq.${encodeURIComponent(tm)}&order=build_count.desc&limit=2000`),
-      rest(`poe_latest_trade_prices?select=combo_key,ilvl_tier,listing_count,sample_n,min_chaos,p25_chaos,median_n_chaos,captured_at&league=eq.${league}`),
+      rest(`poe_latest_trade_prices?select=combo_key,ilvl_tier,listing_count,sample_n,min_chaos,p25_chaos,median_n_chaos,captured_at,search_id&league=eq.${league}`),
       rest(`poe_latest_base_prices?select=size,enchant,passives,ilvl_tier,chaos_value,listing_count,captured_at&league=eq.${league}&size=in.(Large,Medium)`),
       rest(`poe_latest_currency?select=name,chaos_value,captured_at&league=eq.${league}`),
       rest(`poe_trade_queries?select=combo_key,ilvl_tier,query&league=eq.${league}`),
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       timeMachines: [...new Set(snapshots.map((s) => s.time_machine))],
       snapshot: { version: latest.snapshot_version, capturedAt: latest.captured_at, characters: latest.characters },
       usage: usage.map((u) => [u.size, u.enchant, u.notables, u.build_count, Number(u.share)]),
-      trade: trade.map((t) => [t.combo_key, t.ilvl_tier, t.listing_count, t.sample_n, t.min_chaos, t.p25_chaos, t.median_n_chaos, t.captured_at]),
+      trade: trade.map((t) => [t.combo_key, t.ilvl_tier, t.listing_count, t.sample_n, t.min_chaos, t.p25_chaos, t.median_n_chaos, t.captured_at, t.search_id]),
       bases: bases.map((b) => [b.size, b.enchant, b.passives, b.ilvl_tier, Number(b.chaos_value), b.listing_count]),
       currency: Object.fromEntries(currency.map((c) => [c.name, Number(c.chaos_value)])),
       queries: queries.map((q) => [q.combo_key, q.ilvl_tier, q.query?.query ?? null]),
