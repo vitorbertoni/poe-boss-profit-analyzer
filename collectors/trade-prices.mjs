@@ -95,7 +95,8 @@ try {
         : [];
     for (const tier of TIERS) {
       queued.push({
-        league, combo_key: c.combo_key, ilvl_tier: tier, priority: c.build_count,
+        // 3-notable combos get a boost so they interleave with the (more used) pairs instead of waiting behind them
+        league, combo_key: c.combo_key, ilvl_tier: tier, priority: c.notables.length === 3 ? c.build_count * 2.5 : c.build_count,
         query: buildQuery({ size: c.size, enchantOption: opt, notableStats, excludeStats, tier }),
       });
     }

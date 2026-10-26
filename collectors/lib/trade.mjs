@@ -86,9 +86,10 @@ export function parseRules(header) {
 /**
  * Keeps our own usage under `fraction` of every rule the server announces, and also waits when the server's
  * shared state (which counts every request from this IP, not just ours) is near the limit.
- * maxWaitMs: a longer wait (e.g. the 6-hour window already half used) throws LongWait to end the run cleanly.
+ * maxWaitMs: a longer wait throws LongWait to end the run cleanly. Above the 5-minute window (30 searches / 300 s,
+ * which the pacing waits out) so only the 6-hour window (600 / 21600 s) or a penalty ends a run.
  */
-export function limiter({ fraction = 0.5, maxWaitMs = 180e3, now = () => Date.now(), sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+export function limiter({ fraction = 0.5, maxWaitMs = 330e3, now = () => Date.now(), sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   const history = new Map(); // policy -> [timestamps]
   const rules = new Map(); // policy -> [{max, period}]
   const pressure = new Map(); // policy -> wait-until ms from server state

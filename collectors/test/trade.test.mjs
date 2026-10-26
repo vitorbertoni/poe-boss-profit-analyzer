@@ -46,6 +46,14 @@ test('limiter ends the run instead of sleeping through a long window', async () 
   await assert.rejects(() => lim.before('s'), LongWait);
 });
 
+test('limiter waits out the 5-minute window instead of ending the run', async () => {
+  let t = 0;
+  const lim = limiter({ now: () => t, sleep: async (ms) => { t += ms; } });
+  const h = new Map([['x-rate-limit-ip', '5:10:60,30:300:1800'], ['x-rate-limit-ip-state', '0:10:0,0:300:0']]);
+  for (let i = 0; i < 20; i++) { await lim.before('s'); lim.after('s', { get: (k) => h.get(k) }); }
+  assert.ok(t >= 300e3, `paced past the 5-minute window (${t} ms)`);
+});
+
 test('limiter stays under half of each rule and respects server pressure', async () => {
   let t = 0;
   const waits = [];
