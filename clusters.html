@@ -37,6 +37,11 @@
       .sources .tag.bad { color: var(--neg); border-color: rgba(217, 103, 94, 0.4); }
       .unpriced td { color: var(--faint); }
       .progress { color: var(--faint); font-size: 12.5px; }
+      .related { margin-top: 18px; }
+      .related h4 { margin: 0 0 4px; font: 600 13px var(--serif); letter-spacing: 0.05em; color: var(--gold); }
+      .related .fine { margin: 0 0 6px; }
+      .tiers tr.link { cursor: pointer; }
+      .tiers tr.link:hover td { color: var(--gold-hi); }
     </style>
   </head>
   <body>
@@ -70,14 +75,15 @@
       <section class="intro">
         <p>
           The cluster jewels players use most, what they sell for right now with instant buyout, and what they cost to
-          craft with Alteration, Augmentation and Regal. Ranked by expected profit per craft.
+          craft with Alteration, Augmentation, Regal and Exalted Orb — with 2 or 3 notables. Ranked by expected profit
+          per jewel.
         </p>
         <p class="status" id="status"></p>
         <div class="sources" id="sources"></div>
       </section>
 
       <section aria-labelledby="filter-title">
-        <h2 id="filter-title" class="section-title">Filter <span class="muted">notable pairs from poe.ninja builds</span></h2>
+        <h2 id="filter-title" class="section-title">Filter <span class="muted">notable combos from poe.ninja builds</span></h2>
         <div class="panel">
           <div class="filters">
             <div class="field">Size
@@ -85,6 +91,13 @@
                 <button data-size="all" aria-pressed="true">All</button>
                 <button data-size="Large" aria-pressed="false">Large</button>
                 <button data-size="Medium" aria-pressed="false">Medium</button>
+              </div>
+            </div>
+            <div class="field">Notables
+              <div class="seg" role="group" aria-label="Number of notables" id="count">
+                <button data-count="all" aria-pressed="true">All</button>
+                <button data-count="2" aria-pressed="false">2</button>
+                <button data-count="3" aria-pressed="false">3</button>
               </div>
             </div>
             <label class="field">Item level
@@ -109,9 +122,11 @@
       </section>
 
       <details class="panel" style="margin-top: 16px" id="prices-panel">
-        <summary>Currency prices</summary>
+        <summary>Currency prices &amp; options</summary>
         <div class="prices-grid" id="prices"></div>
-        <p class="fine">Prefilled from poe.ninja. Your edits stay in this browser and recalculate every craft cost instantly.
+        <label class="check" style="margin-top: 12px"><input type="checkbox" id="byp" checked /> Sell by-products — misses whose
+          notables form a priced combo are sold instead of reset</label>
+        <p class="fine">Prefilled from poe.ninja. Your edits stay in this browser and recalculate every craft cost.
           <button class="btn" id="reset-prices" type="button">Reset to poe.ninja</button></p>
       </details>
 
@@ -147,9 +162,16 @@
         <h3 id="m-title">How this is calculated</h3>
         <p>
           <b>Combos.</b> poe.ninja builds show how many characters allocate each cluster notable. Two notables that can
-          roll on the same enchant and appear on the same character are counted as a pair. poe.ninja does not say which
-          jewel a notable sits on, so a few pairs may really be on two different jewels; those rarely sell, which keeps them
-          low in the ranking.
+          roll on the same enchant and appear on the same character are counted as a pair; poe.ninja does not say which
+          jewel a notable sits on, so a few pairs may really be on two different jewels (those rarely sell, which keeps them
+          low in the ranking). For the most used Large pairs, the characters that have both notables give the exact count
+          of every third notable.
+        </p>
+        <p>
+          <b>2 or 3 notables.</b> Only Large jewels can hold 3 notables: two prefix notables and one suffix notable (all
+          Large suffix notables are one mod group, and Medium has none). A pair's price counts only jewels with exactly
+          those 2 notables — the trade search excludes the enchant's other notables — so a 3-notable jewel never inflates
+          the pair, and each 3-notable combo has its own row.
         </p>
         <p>
           <b>Sell price.</b> Official trade site, instant buyout listings only, uncorrupted, 8 passives for Large and 4 for
@@ -157,9 +179,16 @@
         </p>
         <p>
           <b>Cost.</b> White base from poe.ninja plus the expected currency to craft it: Alteration until the magic jewel is
-          worth keeping, Augmentation when it helps, Regal, and Scouring + Transmutation on a miss. Mod weights come from the
-          game files (RePoE); the engine picks the cheapest stopping rule, so it may keep jewels with either target notable.
-          It assumes an Alteration gives two mods half of the time.
+          worth keeping, Augmentation when it helps, Regal, then an Exalted Orb when only one notable is missing and it is
+          worth the price; Scouring + Transmutation on a miss. Mod weights come from the game files (RePoE); the engine
+          picks every one of these choices to minimise the expected cost. It assumes an Alteration gives two mods half of
+          the time.
+        </p>
+        <p>
+          <b>By-products.</b> When a miss lands on a combo that has a market price (for example a valuable pair while going
+          for 3 notables), selling it and buying a new base can beat a reset. Those sales lower the cost up to the base they
+          replace; anything above is added to the profit. A pair craft that happens to land a priced third notable counts
+          as a jackpot. Turn this off under Currency prices &amp; options for a conservative view.
         </p>
         <p>
           Prices move and listings are asking prices: check the trade site before you commit. Profit is per jewel and does
