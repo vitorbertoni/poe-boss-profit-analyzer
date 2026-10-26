@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { indexStats, enchantOption, buildQuery, parseRules, limiter, summarize, rateTable } from '../lib/trade.mjs';
+import { indexStats, enchantOption, buildQuery, parseRules, limiter, LongWait, summarize, rateTable } from '../lib/trade.mjs';
 
 const STATS = {
   result: [
@@ -28,6 +28,22 @@ test('buildQuery asks for instant buyout, uncorrupted, ilvl tier and fixed passi
   assert.deepEqual(q.query.filters.misc_filters.filters.ilvl, { min: 75, max: 83 });
   assert.equal(q.query.stats[0].filters.length, 4);
   assert.deepEqual(buildQuery({ size: 'Medium', enchantOption: 1, notableStats: [], tier: 84 }).query.filters.misc_filters.filters.ilvl, { min: 84 });
+});
+
+test('buildQuery adds a NOT group for excluded notables', () => {
+  const q = buildQuery({ size: 'Large', enchantOption: 8, notableStats: ['a', 'b'], excludeStats: ['c', 'd'], tier: 75 });
+  assert.equal(q.query.stats.length, 2);
+  assert.deepEqual(q.query.stats[1], { type: 'not', filters: [{ id: 'c' }, { id: 'd' }] });
+  assert.equal(buildQuery({ size: 'Large', enchantOption: 8, notableStats: ['a'], tier: 75 }).query.stats.length, 1);
+});
+
+test('limiter ends the run instead of sleeping through a long window', async () => {
+  let t = 0;
+  const lim = limiter({ now: () => t, sleep: async (ms) => { t += ms; } });
+  const h = new Map([['x-rate-limit-ip', '5:10:60,600:21600:3600'], ['x-rate-limit-ip-state', '0:10:0,300:21600:0']]);
+  await lim.before('s');
+  lim.after('s', { get: (k) => h.get(k) });
+  await assert.rejects(() => lim.before('s'), LongWait);
 });
 
 test('limiter stays under half of each rule and respects server pressure', async () => {

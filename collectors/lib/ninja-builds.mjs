@@ -121,10 +121,11 @@ export function client({ fetchFn = fetch, delayMs = 2500 } = {}) {
       if (!s) throw new Error(`no builds snapshot for "${leagueUrl}"`);
       return s;
     },
+    // keypassive: one name or an array; repeated `keypassives` params filter to characters with ALL of them
     async search(snap, { timeMachine, keypassive } = {}) {
       const q = new URLSearchParams({ overview: snap.url, type: 'exp' });
       if (timeMachine && timeMachine !== 'current') q.set('timemachine', timeMachine);
-      if (keypassive) q.set('keypassives', keypassive);
+      for (const k of [].concat(keypassive || [])) q.append('keypassives', k);
       return parseSearch(new Uint8Array(await (await get(`/builds/${snap.version}/search?${q}`)).arrayBuffer()));
     },
     async dictionary(hash) {

@@ -36,8 +36,11 @@ export function enchantOption(index, enchant) {
 export const DEFAULT_PASSIVES = { Large: 8, Medium: 4 };
 export const TIER_RANGES = { 1: [1, 49], 50: [50, 67], 68: [68, 74], 75: [75, 83], 84: [84, null] };
 
-/** Search body for a combo on one item level tier: instant buyout only, uncorrupted, cheapest first. */
-export function buildQuery({ size, enchantOption: opt, notableStats, passives = DEFAULT_PASSIVES[size], tier }) {
+/**
+ * Search body for a combo on one item level tier: instant buyout only, uncorrupted, cheapest first.
+ * excludeStats: notables that must NOT be on the jewel (used so a pair is priced without 3-notable jewels).
+ */
+export function buildQuery({ size, enchantOption: opt, notableStats, excludeStats = [], passives = DEFAULT_PASSIVES[size], tier }) {
   const [min, max] = TIER_RANGES[tier];
   const ilvl = max ? { min, max } : { min };
   return {
@@ -53,6 +56,7 @@ export function buildQuery({ size, enchantOption: opt, notableStats, passives = 
             ...notableStats.map((id) => ({ id })),
           ],
         },
+        ...(excludeStats.length ? [{ type: 'not', filters: excludeStats.map((id) => ({ id })) }] : []),
       ],
       filters: {
         misc_filters: { filters: { ilvl, corrupted: { option: 'false' } } },
@@ -63,6 +67,13 @@ export function buildQuery({ size, enchantOption: opt, notableStats, passives = 
 }
 
 // ---------- rate limiting ----------
+export class LongWait extends Error {
+  constructor(ms) {
+    super(`rate limit window needs a ${Math.round(ms / 1000)}s wait — stopping this run`);
+    this.waitMs = ms;
+  }
+}
+
 /** "8:10:60,15:60:120" -> [{max, period, penalty}] ; state "1:10:0" -> [{current, period, active}] */
 export function parseRules(header) {
   if (!header) return [];
@@ -75,8 +86,9 @@ export function parseRules(header) {
 /**
  * Keeps our own usage under `fraction` of every rule the server announces, and also waits when the server's
  * shared state (which counts every request from this IP, not just ours) is near the limit.
+ * maxWaitMs: a longer wait (e.g. the 6-hour window already half used) throws LongWait to end the run cleanly.
  */
-export function limiter({ fraction = 0.5, now = () => Date.now(), sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+export function limiter({ fraction = 0.5, maxWaitMs = 180e3, now = () => Date.now(), sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   const history = new Map(); // policy -> [timestamps]
   const rules = new Map(); // policy -> [{max, period}]
   const pressure = new Map(); // policy -> wait-until ms from server state
@@ -94,6 +106,7 @@ export function limiter({ fraction = 0.5, now = () => Date.now(), sleep = (ms) =
         }
         if (!rules.get(policy)?.length) wait = Math.max(wait, (hist.at(-1) ?? -Infinity) + 6000 - t); // unknown rules: 1 req / 6s
         if (wait <= 0) break;
+        if (wait > maxWaitMs) throw new LongWait(wait);
         await sleep(wait);
       }
       history.get(policy).push(now());

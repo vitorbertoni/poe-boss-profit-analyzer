@@ -2,17 +2,31 @@
 // Low volume: a fixed budget of searches per run, paced well under the announced rate limits, and a hard stop
 // on the first 429 with the backoff persisted for the next run.
 // Env: DATABASE_URL, LEAGUE (trade league id, default: league of the latest builds snapshot),
-//      BUDGET (searches per run, default 40), TOP (combos to queue, default 30), TIERS (default "75,84"),
-//      POESESSID (optional; the search API works without it).
+//      BUDGET (searches per run, default 40), TOP (pairs to queue, default 30), TOP3 (3-notable combos, default 30),
+//      TIERS (default "75,84"), POESESSID (optional; the search API works without it).
+// A Large pair is searched with a NOT group of the enchant's other notables, so its price is for jewels with exactly
+// those 2 notables (a 3-notable jewel is priced as its own combo).
 import { readFileSync } from 'node:fs';
 import { connect, startRun } from './lib/db.mjs';
 import { reportError } from './lib/report.mjs';
-import { TRADE, UA, indexStats, enchantOption, buildQuery, limiter, rateTable, summarize } from './lib/trade.mjs';
+import { TRADE, UA, indexStats, enchantOption, buildQuery, limiter, LongWait, rateTable, summarize } from './lib/trade.mjs';
 
 const clusterData = JSON.parse(readFileSync(new URL('../data/clusters/cluster-mods.json', import.meta.url), 'utf8'));
 const BUDGET = Number(process.env.BUDGET || 40);
 const TOP = Number(process.env.TOP || 30);
+const TOP3 = Number(process.env.TOP3 || 30);
 const TIERS = (process.env.TIERS || '75,84').split(',').map(Number);
+
+// enchant tag -> notable names that can roll on it
+const notablesByEnchant = new Map();
+for (const m of clusterData.mods) {
+  if (!m.notable) continue;
+  for (const [tag, w] of Object.entries(m.weights)) {
+    if (!(w > 0)) continue;
+    if (!notablesByEnchant.has(tag)) notablesByEnchant.set(tag, new Set());
+    notablesByEnchant.get(tag).add(m.notable);
+  }
+}
 
 class Stop extends Error {}
 
@@ -61,25 +75,36 @@ try {
   if (!rates.divine) throw new Error(`no currency prices for ${league} — run ninja-prices first`);
   const enchants = new Map(Object.values(clusterData.sizes).flatMap((s) => s.enchants).map((e) => [e.tag, e]));
 
-  // 2. refresh the queue from the latest snapshot (pairs only: those are the craft targets)
-  const combos = await sql`select size, enchant, combo_key, notables, build_count from poe.cluster_usage
-    where snapshot_id = ${snap.id} and cardinality(notables) = 2 order by build_count desc limit ${TOP}`;
+  // 2. refresh the queue from the latest snapshot: top pairs and top 3-notable combos (Large only)
+  const combos = [
+    ...(await sql`select size, enchant, combo_key, notables, build_count from poe.cluster_usage
+      where snapshot_id = ${snap.id} and cardinality(notables) = 2 order by build_count desc limit ${TOP}`),
+    ...(await sql`select size, enchant, combo_key, notables, build_count from poe.cluster_usage
+      where snapshot_id = ${snap.id} and cardinality(notables) = 3 order by build_count desc limit ${TOP3}`),
+  ];
   const queued = [];
   for (const c of combos) {
     const e = enchants.get(c.enchant);
     const opt = e && enchantOption(stats, e);
     const notableStats = c.notables.map((n) => stats.notables.get(n));
     if (opt == null || notableStats.some((x) => !x)) continue; // unknown on trade: skip, never guess
+    // Large pairs: exclude every other notable of the enchant (a 3rd notable makes it a different item)
+    const excludeStats =
+      c.size === 'Large' && c.notables.length === 2
+        ? [...(notablesByEnchant.get(c.enchant) || [])].filter((n) => !c.notables.includes(n)).map((n) => stats.notables.get(n)).filter(Boolean)
+        : [];
     for (const tier of TIERS) {
       queued.push({
         league, combo_key: c.combo_key, ilvl_tier: tier, priority: c.build_count,
-        query: buildQuery({ size: c.size, enchantOption: opt, notableStats, tier }),
+        query: buildQuery({ size: c.size, enchantOption: opt, notableStats, excludeStats, tier }),
       });
     }
   }
   if (queued.length) {
+    // a changed query (e.g. the new exclusion) is re-checked first
     await sql`insert into poe.trade_queue ${sql(queued.map((q) => ({ ...q, query: sql.json(q.query) })), 'league', 'combo_key', 'ilvl_tier', 'query', 'priority')}
-      on conflict (league, combo_key, ilvl_tier) do update set query = excluded.query, priority = excluded.priority`;
+      on conflict (league, combo_key, ilvl_tier) do update set query = excluded.query, priority = excluded.priority,
+        last_checked = case when poe.trade_queue.query is distinct from excluded.query then null else poe.trade_queue.last_checked end`;
   }
 
   // 3. work the queue: never-checked first, then oldest
@@ -102,15 +127,22 @@ try {
       written++;
     }
   } catch (e) {
-    if (!(e instanceof Stop)) throw e;
-    stopped = e.message; // rate limited: keep what we have, the persisted backoff pauses the next runs
+    // 429: the persisted backoff pauses the next runs. LongWait: this IP's window is busy; the next run re-checks.
+    if (!(e instanceof Stop) && !(e instanceof LongWait)) throw e;
+    stopped = e.message;
   }
   await run.ok(written, { league, searches, queued: queued.length, ...(stopped ? { stopped } : {}) });
   console.log(`${league}: ${written} prices from ${searches} searches (${queued.length} queue entries)${stopped ? ` — ${stopped}` : ''}`);
 } catch (e) {
-  reportError(e);
-  await run?.fail(e).catch(() => {});
-  process.exitCode = 1;
+  if (e instanceof Stop || e instanceof LongWait) {
+    // rate limited before any pricing (e.g. on the stats request): not a failure
+    console.log(e.message);
+    await run?.ok(0, { stopped: e.message }).catch(() => {});
+  } else {
+    reportError(e);
+    await run?.fail(e).catch(() => {});
+    process.exitCode = 1;
+  }
 } finally {
   await sql?.end().catch(() => {});
 }

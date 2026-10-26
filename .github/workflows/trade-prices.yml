@@ -2,7 +2,7 @@ name: trade-prices
 
 # Instant-buyout prices for the most-used cluster combos. Low volume: fixed search budget per run,
 # paced under half of the announced limits, hard stop + persisted backoff on 429.
-# Hourly test (Oct 2026): 60 searches/run (~27 min) over the top 100 combos x 2 ilvl tiers.
+# Hourly (Oct 2026): 60 searches/run (~27 min) over the top 100 pairs + 30 three-notable combos x 2 ilvl tiers.
 on:
   schedule:
     - cron: '23 * * * *'
@@ -39,3 +39,4 @@ jobs:
           POESESSID: ${{ secrets.POESESSID }}
           BUDGET: ${{ inputs.budget || '60' }}
           TOP: '100'
+          TOP3: '30'

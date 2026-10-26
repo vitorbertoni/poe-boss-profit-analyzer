@@ -3,7 +3,7 @@
 // gives co-occurrence. Two notables that share an enchant and appear on the same character are counted as a
 // combo on that enchant — an estimate, since poe.ninja's aggregate does not say which jewel a notable is on.
 // Env: DATABASE_URL, LEAGUE_URL (default: current league's url, e.g. "allflame"), TIME_MACHINE (default "current"),
-//      TOP_NOTABLES (default 40).
+//      TOP_NOTABLES (default 40), TOP_PAIRS (Large pairs searched for a 3rd notable, default 25).
 import { readFileSync } from 'node:fs';
 import { connect, startRun } from './lib/db.mjs';
 import { client, notableIndex, sharedEnchant, comboKey } from './lib/ninja-builds.mjs';
@@ -11,6 +11,7 @@ import { reportError } from './lib/report.mjs';
 
 const clusterData = JSON.parse(readFileSync(new URL('../data/clusters/cluster-mods.json', import.meta.url), 'utf8'));
 const TOP = Number(process.env.TOP_NOTABLES || 40);
+const TOP_PAIRS = Number(process.env.TOP_PAIRS || 25); // Large pairs searched for a 3rd notable
 const timeMachine = process.env.TIME_MACHINE || 'current';
 
 let sql;
@@ -63,6 +64,27 @@ try {
     }
   }
 
+  // 3-notable combos (Large only: 2 prefix + 1 suffix notable). One search per top pair, filtered to characters with
+  // BOTH notables, gives the exact count of every third notable alongside them.
+  const large = new Map(notables.filter((n) => n.size === 'Large').map((n) => [n.name, n]));
+  const topPairs = [...combos.values()]
+    .filter((c) => c.size === 'Large' && c.notables.length === 2)
+    .sort((x, y) => y.build_count - x.build_count)
+    .slice(0, TOP_PAIRS);
+  for (const pair of topPairs) {
+    const [a, b] = pair.notables.map((n) => large.get(n));
+    if (!a || !b) continue;
+    const sub = await ninja.search(snap, { timeMachine, keypassive: pair.notables });
+    const co = new Map([...sub.dimensions.keypassives.counts].map(([i, c]) => [names[i], c]));
+    for (const c of large.values()) {
+      if (c.name === a.name || c.name === b.name || !(c.enchants.get(pair.enchant) > 0)) continue;
+      const prefixes = [a, b, c].filter((n) => n.affix === 'prefix').length;
+      if (prefixes !== 2) continue; // exactly 2 prefix + 1 suffix notable fit on a rare
+      const count = co.get(c.name) || 0;
+      if (count) add('Large', pair.enchant, [a, b, c], count);
+    }
+  }
+
   const rows = [...combos.values()]
     .filter((c) => c.notables.length === 1 || c.build_count >= 5)
     .map((c) => ({ ...c, share: base.total ? c.build_count / base.total : 0 }));
@@ -80,7 +102,8 @@ try {
       written += chunk.length;
     }
   });
-  await run.ok(written, { league: snap.name, version: snap.version, characters: base.total, notables: top.length, requests: ninja.requests });
+  const triples = rows.filter((r) => r.notables.length === 3).length;
+  await run.ok(written, { league: snap.name, version: snap.version, characters: base.total, notables: top.length, pairsSearched: topPairs.length, triples, requests: ninja.requests });
   console.log(`${snap.name} ${timeMachine}: ${base.total} characters, ${top.length} notables searched, ${written} combos, ${ninja.requests} requests`);
 } catch (e) {
   reportError(e);
