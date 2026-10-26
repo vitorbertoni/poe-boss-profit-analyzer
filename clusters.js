@@ -140,7 +140,9 @@ function solveTier(r, t, p) {
   t.craft = solveCraft(prep, { ...p, base: t.base?.chaos ?? 0 }, { values, sellByproducts: state.byproducts });
   t.cost = t.craft.feasible && t.base ? t.craft.expectedCost : null;
   t.sell = sell;
-  t.net = t.cost != null && sell != null ? t.craft.expectedProfit : null;
+  // Conservative profit: sale − expected cost. By-product sales above the base they replace and jackpots are shown
+  // as upside in the detail panel, not here — they are really the profit of crafting a different combo.
+  t.net = t.cost != null && sell != null ? sell - t.cost : null;
 }
 function solveRow(r) {
   const p = prices();
@@ -414,13 +416,15 @@ function renderDetail() {
       b.append(
         el('b', null, 'By-products: '),
         `about ${x.byproductsSold.toFixed(1)} misses per jewel are worth selling — mostly ${top}. They bring back ${money(x.byproductCredit)}` +
-          (c.byproductSurplus > 0.5 ? `, ${money(c.byproductSurplus)} of it above the base they replace (counted in the profit).` : ', which pays for new bases.'),
+          (c.byproductSurplus > 0.5
+            ? `; ${money(c.byproductSurplus)} of that is above the base they replace — upside on top of the profit shown, not counted in it.`
+            : ', which pays for new bases (already in the cost).'),
       );
       parts.push(b);
     }
     if (c.jackpot > 0.5) {
       const j = el('p', 'strategy');
-      j.append(el('b', null, 'Jackpot: '), `some crafts land a priced extra notable; on average that adds ${money(c.jackpot)} per jewel.`);
+      j.append(el('b', null, 'Jackpot: '), `some crafts land a priced extra notable; on average that adds ${money(c.jackpot)} per jewel (upside, not in the profit).`);
       parts.push(j);
     }
   } else if (best?.craft) parts.push(el('p', 'strategy', `Can't be crafted with alt/aug/regal/exalt here: ${best.craft.reason}.`));
