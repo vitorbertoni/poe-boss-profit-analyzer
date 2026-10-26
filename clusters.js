@@ -5,7 +5,7 @@ import { prepareCraft, solveCraft, notableKey } from './lib/craft/engine.js';
 
 const TIERS = [75, 84];
 const PASSIVES = { Large: 8, Medium: 4 }; // matches the trade searches
-const MIN_SAMPLE_FOR_VALUE = 3; // listings needed before a combo's price is used to value by-products
+const MIN_SAMPLE_FOR_VALUE = 5; // listings needed before a combo's price is used to value by-products
 const STORE = 'pbpa:clusters:v2';
 const CURRENCY = [
   ['alt', 'Orb of Alteration', 'Alteration'],
@@ -95,11 +95,12 @@ function build() {
 
   PRICE_IDX = new Map();
   for (const [k, t] of trade) {
-    if (!(t.sample >= MIN_SAMPLE_FOR_VALUE) || !(t.med > 0)) continue;
+    // by-products are valued at the 25th percentile of the cheapest listings (conservative: a quick sale)
+    if (!(t.sample >= MIN_SAMPLE_FOR_VALUE) || !(t.p25 > 0)) continue;
     const [size, tag, names, tier] = k.split('|');
     const ik = `${size}|${tag}|${tier}`;
     if (!PRICE_IDX.has(ik)) PRICE_IDX.set(ik, new Map());
-    PRICE_IDX.get(ik).set(names, Number(t.med));
+    PRICE_IDX.get(ik).set(names, Number(t.p25));
   }
 
   ROWS = API.usage
