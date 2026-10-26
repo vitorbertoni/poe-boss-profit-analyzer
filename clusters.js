@@ -5,6 +5,7 @@ import { prepareCraft, solveCraft, notableKey } from './lib/craft/engine.js';
 
 const TIERS = [75, 84];
 const PASSIVES = { Large: 8, Medium: 4 }; // matches the trade searches
+const THIN_MARKET = 10; // fewer listings than this: price shown with a warning
 const MIN_SAMPLE_FOR_VALUE = 5; // listings needed before a combo's price is used to value by-products
 const STORE = 'pbpa:clusters:v2';
 const CURRENCY = [
@@ -385,8 +386,9 @@ function renderDetail() {
       el('td', null, craftOk ? money(t.craft.craftCost) : t.craft ? 'not possible' : '…'),
       el('td', null, t.sell != null ? money(t.sell) : t.trade ? 'no listings' : 'not priced'),
       el('td', signCls(t.net), t.net != null ? money(t.net, { sign: true }) : '—'),
-      el('td', null, t.trade ? String(t.trade.listings) : '—'),
+      el('td', t.trade && t.trade.listings < THIN_MARKET ? 'neg-t' : null, t.trade ? String(t.trade.listings) + (t.trade.listings < THIN_MARKET ? ' ⚠' : '') : '—'),
     );
+    if (t.trade && t.trade.listings < THIN_MARKET) tr.title = 'Few listings: this price is unreliable (asking prices in a thin market).';
     table.tBodies[0].append(tr);
   }
 
@@ -396,6 +398,8 @@ function renderDetail() {
   panel.style.marginTop = '14px';
   panel.append(table);
   if (r.tiers.some((t) => t.base && !t.base.exact)) panel.append(el('p', 'fine', `* no ${PASSIVES[r.size]}-passive base listed; cheapest other passive count shown.`));
+  if (r.tiers.some((t) => t.trade && t.trade.listings < THIN_MARKET))
+    panel.append(el('p', 'fine', `⚠ fewer than ${THIN_MARKET} listings: a thin market, where asking prices can be far from what actually sells.`));
   parts.push(panel);
 
   if (best?.craft?.feasible) {
