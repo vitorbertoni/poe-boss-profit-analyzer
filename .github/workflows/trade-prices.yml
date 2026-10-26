@@ -2,16 +2,18 @@ name: trade-prices
 
 # Instant-buyout prices for the most-used cluster combos. Low volume: fixed search budget per run,
 # paced under half of the announced limits, hard stop + persisted backoff on 429.
-# Hourly (Oct 2026): 60 searches/run (~27 min) over the top 100 pairs + 30 three-notable combos x 2 ilvl tiers.
+# Every 2 hours (GitHub often runs schedules late, every 3-5 h): 120 searches/run (~55 min) over the top 100
+# pairs + 30 three-notable combos x 2 ilvl tiers. Public repo: Actions minutes are free. The 6-hour trade window
+# (600 searches/IP) is respected by the limiter, which ends a run early when this IP has used half of it.
 on:
   schedule:
-    - cron: '23 * * * *'
+    - cron: '23 */2 * * *'
   workflow_dispatch:
     inputs:
       budget:
         description: Searches this run
         required: false
-        default: '60'
+        default: '120'
 
 concurrency:
   group: trade-prices
@@ -20,7 +22,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 90
     defaults:
       run:
         working-directory: collectors
@@ -37,6 +39,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POESESSID: ${{ secrets.POESESSID }}
-          BUDGET: ${{ inputs.budget || '60' }}
+          BUDGET: ${{ inputs.budget || '120' }}
           TOP: '100'
           TOP3: '30'
