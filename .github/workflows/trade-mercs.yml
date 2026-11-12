@@ -1,0 +1,48 @@
+name: trade-mercs
+
+# Samples Mercenary Warrant listings on the trade site for the /mercenaries ranking. Low volume: 24 searches and up
+# to 48 fetches of 10 per run, paced under half of the announced limits by the shared limiter; a 429 writes the shared
+# backoff that trade-prices also respects. Offset by an hour from trade-prices (:23 on even hours) so the two rarely
+# share a window. Public repo: Actions minutes are free.
+on:
+  schedule:
+    - cron: '53 1-23/2 * * *'
+  # A change to the collector runs it once right away, so a broken parser shows up immediately.
+  push:
+    branches: [main]
+    paths:
+      - collectors/trade-mercs.mjs
+      - collectors/lib/mercs.mjs
+      - .github/workflows/trade-mercs.yml
+  workflow_dispatch:
+    inputs:
+      searches:
+        description: Searches this run
+        required: false
+        default: '24'
+
+concurrency:
+  group: trade-mercs
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: collectors
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: collectors/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: node trade-mercs.mjs
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          POESESSID: ${{ secrets.POESESSID }}
+          SEARCHES: ${{ inputs.searches || '24' }}

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mercenaries · PoE Boss Profit Analyzer</title>
+    <meta
+      name="description"
+      content="Which Mercenary Warrants sell for the most in Path of Exile 1: asking prices on the official trade site by mercenary class, skill and support gem, so you know which mercenaries are worth a rematch."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23c9a45c'/><path d='M16 9l6 3.5v7L16 23l-6-3.5v-7z' fill='%2314100c'/></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/site.css" />
+    <style>
+      .merc-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+      .rank td.range { color: var(--muted); }
+      .rank a.out { color: var(--muted); text-decoration: none; }
+      .rank a.out:hover { color: var(--gold-hi); }
+      .rank tbody tr { cursor: default; }
+      .ret i.neg { background: var(--neg); }
+      .seg.wrap-seg { flex-wrap: wrap; }
+      .kpi small { display: block; font-size: 11.5px; color: var(--faint); margin-top: 2px; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      @media (max-width: 760px) {
+        .merc-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .rank .col-range, .rank .col-supply { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-inner">
+        <div class="top-left">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <h1>PoE Boss Profit Analyzer</h1>
+              <p class="sub">Mercenary Warrants · Path of Exile 1</p>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Pages">
+            <a href="/">Boss ROI</a>
+            <a href="/invest">League Investments</a>
+            <a href="/clusters">Cluster Jewels</a>
+            <a href="/mercenaries" aria-current="page">Mercenaries</a>
+          </nav>
+        </div>
+        <div class="controls">
+          <span class="pill" id="league">Loading…</span>
+          <div class="seg" role="group" aria-label="Currency unit" id="unit">
+            <button data-unit="div" aria-pressed="true">Divine</button>
+            <button data-unit="chaos" aria-pressed="false">Chaos</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p>
+          Which Mercenary Warrants sell for the most, so you know when a mercenary is worth the rematch instead of taking
+          an item. A warrant's gear is re-rolled when it is used, so its price comes from the mercenary's class, level,
+          skills and supports. Asking prices on the official trade site, last 7 days.
+        </p>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section class="panel" style="margin-top: 8px" aria-label="Market overview">
+        <div class="merc-kpis" id="kpis"></div>
+      </section>
+
+      <section aria-labelledby="rank-title">
+        <h2 id="rank-title" class="section-title">Ranking <span class="muted" id="rank-note"></span></h2>
+        <div class="panel">
+          <div class="filters">
+            <div class="field">Rank by
+              <div class="seg wrap-seg" role="group" aria-label="What to rank" id="view">
+                <button data-view="class" aria-pressed="true">Class</button>
+                <button data-view="gilded" aria-pressed="false">Gilded supports</button>
+                <button data-view="support" aria-pressed="false">All supports</button>
+                <button data-view="skill" aria-pressed="false">Skills</button>
+                <button data-view="other" aria-pressed="false">Infamous &amp; level</button>
+              </div>
+            </div>
+            <label class="field">Min. sellers
+              <input class="in" id="minsellers" type="number" min="1" step="1" value="3" inputmode="numeric" />
+            </label>
+            <label class="field grow">Search
+              <input class="search" id="q" type="search" placeholder="e.g. Kineticist" autocomplete="off" />
+            </label>
+          </div>
+          <p class="takeaway" id="takeaway"></p>
+          <div class="rank-box" style="margin-top: 12px">
+            <table class="rank">
+              <thead>
+                <tr>
+                  <th aria-sort="none"><button data-sort="feature">Feature</button></th>
+                  <th aria-sort="descending"><button data-sort="median">Median price</button></th>
+                  <th aria-sort="none" class="col-range"><button data-sort="p25">Typical range</button></th>
+                  <th aria-sort="none"><button data-sort="premium">vs. any warrant</button></th>
+                  <th aria-sort="none"><button data-sort="sellers">Sellers</button></th>
+                  <th aria-sort="none" class="col-supply"><button data-sort="supply">Listed now</button></th>
+                  <th><span class="sr-only">Trade</span></th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel method" style="margin-top: 16px" aria-labelledby="m-title">
+        <h3 id="m-title">How this is calculated</h3>
+        <p>
+          <b>Sample.</b> Every two hours a collector reads the newest instant-buyout warrant listings on the official trade
+          site (all prices, then at least 1 and 10 divines so expensive warrants are not drowned out), plus one search per
+          mercenary skill and support in rotation, Gilded supports first. Only listings indexed in the last 7 days count.
+        </p>
+        <p>
+          <b>Prices.</b> Converted to divines with poe.ninja rates when the listing was read. Each seller counts once per
+          price, so someone listing fifty warrants at the same price is one observation, not fifty. "Median price" is the
+          middle asking price of warrants that have that class, skill or support; "typical range" is the 25th–75th percentile.
+        </p>
+        <p>
+          <b>vs. any warrant.</b> The median for the feature divided by the median of all warrants. It shows what moves the
+          price, not the price of one feature on its own: an expensive support usually sits on an expensive class too.
+        </p>
+        <p>
+          <b>Listed now.</b> How many warrants with that skill or support the trade site reported at the last check: low
+          supply and a high median is what to look for. These are asking prices, not sales — check the trade site before you
+          price your own.
+        </p>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        Listings from the <a href="https://www.pathofexile.com/trade" target="_blank" rel="noopener">official trade site</a>,
+        currency rates from <a href="https://poe.ninja/" target="_blank" rel="noopener">poe.ninja</a>.
+      </p>
+      <p>
+        This site is fan-made and not affiliated with or endorsed by Grinding Gear Games. Path of Exile is a
+        trademark of Grinding Gear Games.
+      </p>
+    </footer>
+
+    <script type="module" src="/mercenaries.js"></script>
+  </body>
+</html>
