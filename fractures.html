@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fractured Base Search · PoE Boss Profit Analyzer</title>
+    <meta
+      name="description"
+      content="Trade searches for fractured armour bases worth locking and rerolling in Path of Exile 1: a top-tier suffix, few other suffixes, and a top-tier fractured life or defence prefix."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 2l12 7v14l-12 7-12-7V9z' fill='%23c9a45c'/><path d='M16 9l6 3.5v7L16 23l-6-3.5v-7z' fill='%2314100c'/></svg>" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/site.css" />
+    <style>
+      details.panel summary { cursor: pointer; font: 600 13px var(--serif); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); list-style: none; }
+      details.panel summary::-webkit-details-marker { display: none; }
+      details.panel summary::after { content: ' +'; color: var(--muted); }
+      details.panel[open] summary::after { content: ' −'; }
+      details.panel[open] summary { margin-bottom: 12px; }
+      .fr-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px 22px; }
+      .fr-groups h4 { margin: 0 0 6px; font: 600 12.5px var(--serif); letter-spacing: 0.05em; color: var(--gold); }
+      .fr-groups .check { padding-bottom: 3px; }
+      .fr-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+      .slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+      .slot h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+      .slot .row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; margin-bottom: 12px; }
+      .slot .line { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+      .slot .line b { color: var(--text); font-weight: 600; }
+      .slot ul { list-style: none; padding: 0; margin: 6px 0 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+      .slot ul .tag { margin-left: 0; font-size: 11.5px; }
+      .slot ul .tag.warn { color: var(--gold-hi); border-color: rgba(201, 164, 92, 0.45); }
+      .slot ul .tag.off { opacity: 0.55; text-decoration: line-through; }
+      .slot .searches { display: grid; gap: 8px; margin-top: 8px; }
+      .slot .search-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .slot .search-row a.btn { color: var(--gold-hi); text-decoration: none; border-color: var(--gold); }
+      .slot .search-row a.btn:hover { background: var(--panel-2); }
+      .slot .err { color: var(--neg); font-size: 13px; margin: 6px 0; }
+      .slot .fine { margin-top: 10px; }
+      @media (max-width: 900px) {
+        .slots { grid-template-columns: minmax(0, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-inner">
+        <div class="top-left">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+              <h1>PoE Boss Profit Analyzer</h1>
+              <p class="sub">Fractured base search · Path of Exile 1</p>
+            </div>
+          </div>
+          <nav class="nav" aria-label="Pages">
+            <a href="/">Boss ROI</a>
+            <a href="/invest">League Investments</a>
+            <a href="/clusters">Cluster Jewels</a>
+            <a href="/fractures" aria-current="page">Fractured Bases</a>
+            <a href="/mercenaries">Mercenaries</a>
+          </nav>
+        </div>
+        <div class="controls">
+          <span class="pill" id="league-pill">Loading…</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p>
+          Trade searches for armour bases with a top-tier fractured life or defence prefix and a top-tier suffix that is
+          (almost) alone on its side. Lock that suffix at the bench (1 Suffix Modifier cannot be changed, 1 div), then
+          reroll the rest with a Veiled Chaos Orb or an Essence of your choice. Pick a suffix, and the page builds one
+          search per slot.
+        </p>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section aria-labelledby="filter-title">
+        <h2 id="filter-title" class="section-title">Search <span class="muted">applies to every slot</span></h2>
+        <div class="panel">
+          <div class="filters">
+            <label class="field">Suffix to keep
+              <select class="sel" id="target"></select>
+            </label>
+            <div class="field">Suffix tier
+              <div class="seg" role="group" aria-label="Suffix tier" id="ttier">
+                <button data-v="1" aria-pressed="true">T1</button>
+                <button data-v="2" aria-pressed="false">T1–T2</button>
+              </div>
+            </div>
+            <div class="field">Fractured tier
+              <div class="seg" role="group" aria-label="Fractured tier" id="ftier">
+                <button data-v="1" aria-pressed="true">T1</button>
+                <button data-v="2" aria-pressed="false">T1–T2</button>
+              </div>
+            </div>
+            <div class="field">Listings
+              <div class="seg" role="group" aria-label="Listings" id="status-opt">
+                <button data-v="online" aria-pressed="true">Online</button>
+                <button data-v="securable" aria-pressed="false">Instant buyout</button>
+              </div>
+            </div>
+            <label class="field">Max. price (div)
+              <input class="in" id="maxprice" type="number" min="0" step="any" placeholder="any" inputmode="decimal" />
+            </label>
+            <label class="field">League
+              <input class="search" id="league" type="text" autocomplete="off" style="width: 170px" />
+            </label>
+          </div>
+          <p class="takeaway" id="takeaway"></p>
+        </div>
+      </section>
+
+      <details class="panel" style="margin-top: 16px" id="fr-panel">
+        <summary>Fractured mods that count</summary>
+        <div class="fr-groups" id="fr-groups"></div>
+        <div class="fr-actions">
+          <button class="btn" type="button" id="fr-default">Defaults</button>
+          <button class="btn" type="button" id="fr-all">All</button>
+          <button class="btn" type="button" id="fr-none">None</button>
+        </div>
+        <p class="fine">Only the tier you picked counts (T1, or T1–T2). Mods that cannot roll next to the chosen suffix are skipped in that slot.</p>
+      </details>
+
+      <div class="slots" id="slots"></div>
+
+      <section class="panel method" style="margin-top: 16px" aria-labelledby="m-title">
+        <h3 id="m-title">How the searches work</h3>
+        <p>
+          <b>Tiers.</b> Tier values come from the game files (RePoE) for top-tier bases of each slot and defence type. A
+          tier filter is the lowest value that tier can roll on any base in the search, so "T1" never lets a T2 through
+          on that slot. If you pick a base, only its defence type is used.
+        </p>
+        <p>
+          <b>Suffixes.</b> "Only 1" means the chosen suffix is the only suffix on the item, so the 1-mod lock protects
+          exactly that mod. "Up to 2" and "up to 3" also show items with other suffixes; you then need the 2-mod lock or
+          the full lock (or check in game which mod the 1-mod lock keeps).
+        </p>
+        <p>
+          <b>Fractured mods.</b> The selected fractured prefixes are combined in one search ("at least one of"). A flat
+          hybrid such as "+# to Armour and +# to Evasion Rating" shares its stats with plain flat Armour and Evasion,
+          so a single-stat filter would also match a low tier of those. When that happens the hybrid gets its own search
+          that requires both stats.
+        </p>
+        <p>
+          <b>Filters on every search.</b> Rare, fractured, not corrupted, not mirrored, no crafted mods, sorted by price.
+          Searches open on the official trade site, so they use your own rate limit and nothing is stored here.
+        </p>
+        <p>
+          <b>Limits.</b> The trade site adds up every line with the same stat, so an item with two fractured mods that
+          share a stat can pass a T1 filter with two lower tiers. Prices are asking prices: check the item before you buy.
+        </p>
+        <p class="fine" id="data-note"></p>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>
+        Searches open on the <a href="https://www.pathofexile.com/trade" target="_blank" rel="noopener">official trade site</a>, mod tiers from
+        <a href="https://github.com/repoe-fork/repoe-fork.github.io" target="_blank" rel="noopener">RePoE</a>.
+      </p>
+      <p>
+        This site is fan-made and not affiliated with or endorsed by Grinding Gear Games. Path of Exile is a
+        trademark of Grinding Gear Games.
+      </p>
+    </footer>
+
+    <script type="module" src="/fractures.js"></script>
+  </body>
+</html>
