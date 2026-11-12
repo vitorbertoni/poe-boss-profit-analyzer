@@ -48,7 +48,7 @@ function seg(id, value, onPick) {
 const target = () => DATA.targets.find((t) => t.type === state.target) || DATA.targets[0];
 const selectedFractures = () => DATA.fractures.filter((f) => (state.fractures ? state.fractures.has(f.type) : f.on));
 const tierText = (t) => (t === 1 ? 'T1' : 'T1–T2');
-const statLine = (id, min) => (DATA.stats[id]?.text || id).replace(/#/, `${min}+`).replace(' (Local)', '');
+const statLine = (id, min) => `${(DATA.stats[id]?.text || id).replace(/#/, min).replace(' (Local)', '')} or more`;
 
 // ---------- controls ----------
 function renderControls() {
