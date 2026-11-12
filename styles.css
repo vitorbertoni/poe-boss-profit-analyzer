@@ -57,6 +57,13 @@ h1 { font: 700 20px/1.1 var(--serif); letter-spacing: 0.04em; margin: 0; color: 
 .status { font-size: 13px; color: var(--faint); }
 .status.warn { color: var(--warn); }
 
+.pick-head { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin: 22px 0 12px; }
+.pick-head .section-title { margin: 0; }
+.pick-head .seg { flex-wrap: wrap; }
+.card-tier { font: 600 10.5px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+.entry-list { display: grid; gap: 6px; margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.entry-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.entry-row .in { flex: none; }
 .section-title { font: 600 15px var(--serif); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin: 22px 0 12px; display: flex; gap: 10px; align-items: baseline; }
 
 /* Boss grid */

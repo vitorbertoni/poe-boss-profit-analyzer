@@ -6,7 +6,7 @@
     <title>PoE Boss Profit Analyzer</title>
     <meta
       name="description"
-      content="Expected value, ROI and Monte Carlo simulation for Path of Exile uber pinnacle bosses, using live poe.ninja prices and community drop-rate estimates."
+      content="Expected value, ROI and Monte Carlo simulation for Path of Exile bosses — uber and regular pinnacles, Atziri, Black Star and more — using live poe.ninja prices and community drop-rate estimates."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,7 +26,7 @@
             <span class="brand-mark" aria-hidden="true"></span>
             <div>
               <h1>PoE Boss Profit Analyzer</h1>
-              <p class="sub">Uber pinnacle boss ROI · Path of Exile 1</p>
+              <p class="sub">Boss ROI · Path of Exile 1</p>
             </div>
           </div>
           <nav class="nav" aria-label="Pages">
@@ -55,7 +55,10 @@
       </section>
 
       <section aria-labelledby="pick-title">
-        <h2 id="pick-title" class="section-title">Choose a boss <span class="muted">sorted by ROI</span></h2>
+        <div class="pick-head">
+          <h2 id="pick-title" class="section-title">Choose a boss <span class="muted">sorted by ROI</span></h2>
+          <div class="seg" role="group" aria-label="Boss type" id="tiers"></div>
+        </div>
         <div class="grid" id="grid"></div>
       </section>
 

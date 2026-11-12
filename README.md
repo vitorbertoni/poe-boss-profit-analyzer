@@ -4,7 +4,7 @@ Fan-made Path of Exile 1 profit tools, hosted on Vercel.
 
 | Page | What it does |
 | --- | --- |
-| `/` Boss ROI | Expected value, ROI and Monte Carlo simulation for uber pinnacle bosses |
+| `/` Boss ROI | Expected value, ROI and Monte Carlo simulation for 26 fragment bosses: uber and regular pinnacles, Atziri, Black Star and Infinite Hunger |
 | `/invest` League Investments | How currency and fragment prices move through a league, from poe.ninja data dumps |
 | `/clusters` Cluster Jewels | *In progress* — notable combos worth crafting, by market price vs expected craft cost |
 

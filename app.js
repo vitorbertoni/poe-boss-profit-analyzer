@@ -1,4 +1,4 @@
-import { BOSSES } from './data/bosses.js';
+import { BOSSES, TIERS } from './data/bosses.js';
 import { buildModel, simulate, priceKey } from './lib/calc.js';
 
 const RUNS = [5, 10, 100];
@@ -10,6 +10,7 @@ const state = {
   meta: null,
   unit: 'div',
   selected: null,
+  tier: 'all',
   simRuns: 10,
   overrides: { price: {}, chance: {} },
 };
@@ -25,11 +26,15 @@ function loadPrefs() {
     if (saved.unit) state.unit = saved.unit;
     if (saved.overrides) state.overrides = { price: {}, chance: {}, ...saved.overrides };
     if (saved.selected) state.selected = saved.selected;
+    if (saved.tier) state.tier = saved.tier;
   } catch {}
 }
 function savePrefs() {
   try {
-    localStorage.setItem(STORE, JSON.stringify({ unit: state.unit, overrides: state.overrides, selected: state.selected }));
+    localStorage.setItem(
+      STORE,
+      JSON.stringify({ unit: state.unit, overrides: state.overrides, selected: state.selected, tier: state.tier }),
+    );
   } catch {}
 }
 
@@ -90,11 +95,24 @@ function renderHeader() {
     st.className = 'status warn';
     st.textContent = `Live prices are unavailable right now. Showing a saved snapshot from ${new Date(m.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`;
   }
-  document.querySelectorAll('.seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.unit === state.unit)));
+  document.querySelectorAll('[data-unit]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.unit === state.unit)));
+}
+
+const TIER_LABEL = Object.fromEntries(TIERS.map((t) => [t.id, t.label]));
+
+function renderTiers() {
+  const counts = Object.fromEntries(TIERS.map((t) => [t.id, BOSSES.filter((b) => b.tier === t.id).length]));
+  $('#tiers').innerHTML = [{ id: 'all', label: 'All' }, ...TIERS]
+    .map((t) => {
+      const n = t.id === 'all' ? BOSSES.length : counts[t.id];
+      return `<button data-tier="${t.id}" aria-pressed="${t.id === state.tier}">${esc(t.label)} <span class="muted">${n}</span></button>`;
+    })
+    .join('');
 }
 
 function fragIcon(model) {
-  const icon = state.prices[model.boss.fragment.ref]?.icon;
+  const first = model.boss.entry[0].ref;
+  const icon = state.prices[Array.isArray(first) ? first[0] : first]?.icon;
   return icon
     ? `<span class="frag-icon"><img src="${esc(icon)}" alt="" loading="lazy" /></span>`
     : `<span class="frag-icon">${esc(model.boss.name.replace('Uber ', '')[0])}</span>`;
@@ -114,7 +132,8 @@ function renderGrid(all) {
         ${fragIcon(m)}
         <div>
           <div class="card-name">${esc(m.boss.name)}</div>
-          <div class="card-frag">${m.boss.fragment.qty}× ${esc(m.boss.fragment.name)}</div>
+          <div class="card-tier">${esc(TIER_LABEL[m.boss.tier])}</div>
+          <div class="card-frag">${esc(m.boss.entryLabel)}</div>
         </div>
       </div>
       <div class="card-stats">
@@ -197,7 +216,19 @@ function renderDetail(model) {
   const b = model.boss;
   const sims = Object.fromEntries(RUNS.map((n) => [n, simulate(model, n, ITERS)]));
   const sim = sims[state.simRuns];
-  const fragC = model.fragPrice.c;
+  const unitLabel = state.unit === 'chaos' ? 'c' : 'div';
+  const entryRows = model.entry
+    .map(
+      (e) => `
+          <div class="entry-row">
+            ${e.qty} ×
+            <input class="in ${e.price.src === 'manual' ? 'edited' : ''}" type="number" min="0" step="any" inputmode="decimal"
+              data-price="${esc(priceKey(e))}" value="${toUnit(e.price.c)}" placeholder="—" aria-label="Price of ${esc(e.name)}" />
+            <span>${unitLabel} ${esc(e.name)}</span>
+            ${e.price.c == null ? '<span class="badge warn">no price</span>' : ''}
+          </div>`,
+    )
+    .join('');
 
   $('#detail').innerHTML = `
     <div class="detail-head">
@@ -220,11 +251,9 @@ function renderDetail(model) {
             <div class="kpi"><span>Expected return</span><b>${money(model.ev)}</b></div>
             <div class="kpi"><span>ROI</span><b class="${model.roi == null ? '' : signCls(model.roi) + '-t'}">${model.roi == null ? '—' : (model.roi >= 0 ? '+' : '') + Math.round(model.roi * 100) + '%'}</b></div>
           </div>
-          <div class="cost-line">
-            Entry: ${b.fragment.qty} ×
-            <input class="in ${model.fragPrice.src === 'manual' ? 'edited' : ''}" type="number" min="0" step="any" inputmode="decimal"
-              data-price="${esc(priceKey(b.fragment))}" value="${toUnit(fragC)}" placeholder="—" aria-label="Price of ${esc(b.fragment.name)}" />
-            <span>${state.unit === 'chaos' ? 'c' : 'div'} (${esc(b.fragment.name)})</span>
+          <div class="entry-list" aria-label="Entry cost">
+            <span>Entry per attempt</span>
+            ${entryRows}
           </div>
         </div>
 
@@ -250,7 +279,7 @@ function renderDetail(model) {
             <div class="kpi"><span>Good luck (P90)</span><b class="${signCls(sim.p90)}-t">${money(sim.p90, { sign: true })}</b></div>
           </div>
           ${histogramSvg(sim)}
-          <p class="fine">Profit after paying for ${sim.runs} sets of fragments. Chase drops make the distribution lopsided: the median can sit well below the average. Chart shows the 1st–99th percentile.</p>
+          <p class="fine">Profit after paying the entry cost ${sim.runs} times. Chase drops make the distribution lopsided: the median can sit well below the average. Chart shows the 1st–99th percentile.</p>
         </div>
       </div>
     </div>`;
@@ -258,9 +287,12 @@ function renderDetail(model) {
 
 function render() {
   const all = models();
-  if (!state.selected || !all.some((m) => m.boss.id === state.selected)) state.selected = all[0].boss.id;
+  if (!['all', ...TIERS.map((t) => t.id)].includes(state.tier)) state.tier = 'all';
+  const shown = state.tier === 'all' ? all : all.filter((m) => m.boss.tier === state.tier);
+  if (!state.selected || !shown.some((m) => m.boss.id === state.selected)) state.selected = shown[0].boss.id;
   renderHeader();
-  renderGrid(all);
+  renderTiers();
+  renderGrid(shown);
   renderDetail(all.find((m) => m.boss.id === state.selected));
 }
 
@@ -281,6 +313,13 @@ document.addEventListener('click', (e) => {
     render();
     return;
   }
+  const tier = e.target.closest('[data-tier]');
+  if (tier) {
+    state.tier = tier.dataset.tier;
+    savePrefs();
+    render();
+    return;
+  }
   const runs = e.target.closest('[data-runs]');
   if (runs) {
     state.simRuns = Number(runs.dataset.runs);
@@ -290,7 +329,7 @@ document.addEventListener('click', (e) => {
   if (e.target.id === 'reset') {
     const boss = BOSSES.find((b) => b.id === state.selected);
     for (const k of Object.keys(state.overrides.chance)) if (k.startsWith(`${boss.id}/`)) delete state.overrides.chance[k];
-    const keys = [boss.fragment, ...boss.groups.flatMap((g) => g.items)].map(priceKey);
+    const keys = [...boss.entry, ...boss.groups.flatMap((g) => g.items)].map(priceKey);
     for (const k of keys) delete state.overrides.price[k];
     savePrefs();
     render();
