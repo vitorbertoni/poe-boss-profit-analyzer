@@ -1,6 +1,6 @@
 /* Shared navigation + League Investments page. Loaded after styles.css. */
 
-.nav { display: flex; gap: 4px; margin-left: 8px; }
+.nav { display: flex; flex-wrap: wrap; gap: 4px; margin-left: 8px; }
 .nav a {
   text-decoration: none; color: var(--muted); font-size: 13px; padding: 6px 10px; border-radius: 8px;
   border: 1px solid transparent; white-space: nowrap;
@@ -87,6 +87,7 @@
 }
 @media (max-width: 560px) {
   .nav { margin-left: 0; }
+  .nav a { padding: 6px 8px; }
   .top .pill { white-space: nowrap; font-size: 12px; padding: 4px 10px; }
   .search { width: 100%; }
   .field.grow { flex: 1 1 100%; }
