@@ -4,7 +4,7 @@ Fan-made Path of Exile 1 profit tools, hosted on Vercel.
 
 | Page | What it does |
 | --- | --- |
-| `/` Boss ROI | Expected value, ROI and Monte Carlo simulation for 26 fragment bosses: uber and regular pinnacles, Atziri, Black Star and Infinite Hunger |
+| `/` Boss ROI | Expected value, ROI and Monte Carlo simulation for 27 fragment bosses: uber and regular pinnacles, Atziri, Black Star, Infinite Hunger and the Hive Colony (Tul & Esh) |
 | `/invest` League Investments | How currency and fragment prices move through a league, from poe.ninja data dumps |
 | `/mercenaries` Mercenaries | Which Mercenary Warrants sell for the most, by class, skill and support (trade site asking prices) |
 | `/fractures` Fractured Bases | Trade searches per armour slot for a top-tier fractured life/defence prefix plus a top-tier suffix that is alone (or nearly) on its side, for lock-and-reroll crafts |

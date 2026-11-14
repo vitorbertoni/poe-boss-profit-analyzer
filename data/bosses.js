@@ -906,6 +906,50 @@ const OTHERS = [
       },
     ],
   },
+  {
+    // Hive Colony: It That Was Tul and It That Was Esh are fought together; the wiki's table (identical on both
+    // boss pages) is per encounter: one exclusive unique, plus one random 1-mod Foulborn Breach unique.
+    id: 'hive-colony',
+    name: 'It That Was Tul & It That Was Esh',
+    entryLabel: '1× Hivebrain Gland',
+    entry: one('Hivebrain Gland', frag('hivebrain-gland')),
+    wiki: 'It_That_Was_Esh',
+    sample: 'n≈330 encounters, 3.28',
+    note: 'One drop table per encounter (both bosses together). Hiveblood is not counted: it cannot be traded.',
+    groups: [
+      {
+        kind: 'pick',
+        label: 'Guaranteed unique',
+        items: [
+          { name: 'The Will of Esh', ref: acc('the-will-of-esh-synaptic-ring'), w: 17 },
+          { name: 'The Will of Tul', ref: acc('the-will-of-tul-cryonic-ring'), w: 17 },
+          { name: 'The Will of Xoph', ref: acc('the-will-of-xoph-enthalpic-ring'), w: 17 },
+          { name: 'The Will of Uul-Netol', ref: acc('the-will-of-uul-netol-organic-ring'), w: 12 },
+          { name: 'The Sundered Will', ref: acc('the-sundered-will-fugitive-ring'), w: 4 },
+          { name: 'Hand of the Lords', ref: arm('hand-of-the-lords-carnal-mitts'), w: 29 },
+          { name: 'The Grey Wind', ref: wep('the-grey-wind-spectral-axe'), w: 3 },
+          { name: "Uul-Netol's Vow", ref: acc('uul-netols-vow-unset-amulet'), w: 1 },
+        ],
+      },
+      {
+        kind: 'each',
+        label: 'Additional drops',
+        items: [
+          {
+            name: 'Foulborn Breach unique (random, 1 mod)',
+            ref: NO_PRICE,
+            p: 100,
+            note: 'Guaranteed, but the item and mod are random — type your average sale price',
+          },
+          { name: 'Flesh of Xesht', ref: cur('flesh-of-xesht'), p: 20 },
+          { name: 'Foulgrasp Support', ref: gem('foulgrasp-support'), p: 10 },
+          { name: 'Hiveborn Support', ref: gem('hiveborn-support'), p: 5 },
+          { name: 'Something Dark', ref: card('something-dark'), p: 10 },
+          { name: 'The Escape', ref: card('the-escape'), p: 9 },
+        ],
+      },
+    ],
+  },
 ].map((b) => ({ ...b, tier: 'other' }));
 
 export const TIERS = [
